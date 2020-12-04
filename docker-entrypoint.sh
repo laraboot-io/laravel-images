@@ -31,7 +31,7 @@ create_breeze_setup() {
   php artisan breeze:install
   npm install && npm run dev
 
-  zip -r breeze.zip . &&
+  zip -qr breeze.zip . &&
     mv breeze.zip /usr/app
 }
 
@@ -44,7 +44,7 @@ create_default_setup() {
     mkdir -p default && cp -r /usr/app/mount/laravel-app/* default
   fi
   cd default &&
-    zip -r default.zip . &&
+    zip -qr default.zip . &&
     mv default.zip /usr/app
 }
 
