@@ -24,7 +24,6 @@ create_breeze_setup() {
   else
     mkdir -p app && cp -r /usr/app/mount/laravel-app/* app
   fi
-  cd app || exit 255
   composer require laravel/breeze --dev
   php artisan breeze:install
 }
@@ -36,7 +35,6 @@ create_default_setup() {
   else
     mkdir -p app && cp -r /usr/app/mount/laravel-app/* app
   fi
-  cd app || exit 255
 }
 
 #~/.config/composer/vendor/bin/laravel $@
