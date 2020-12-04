@@ -24,10 +24,9 @@ create_breeze_setup() {
   else
     mkdir -p app && cp -r /usr/app/mount/laravel-app/* app
   fi
-  cd app || error_exit 'Error creating an empty laravel application' 255
+  cd app || exit 255
   composer require laravel/breeze --dev
   php artisan breeze:install
-  cd ..
 }
 
 create_default_setup() {
@@ -37,10 +36,15 @@ create_default_setup() {
   else
     mkdir -p app && cp -r /usr/app/mount/laravel-app/* app
   fi
-  cd app || error_exit 'Error creating an empty laravel application' 255
-  cd ..
+  cd app || exit 255
 }
 
 #~/.config/composer/vendor/bin/laravel $@
 
-$@
+cd /usr/app
+
+create_default_setup
+
+cd /usr/app
+
+create_breeze_setup
