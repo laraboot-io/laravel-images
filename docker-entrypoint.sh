@@ -29,7 +29,9 @@ create_breeze_setup() {
   cd breeze
   composer require laravel/breeze --dev
   php artisan breeze:install
-  zip breeze.zip . &&
+  npm install && npm run dev
+
+  zip -r breeze.zip . &&
     mv breeze.zip /usr/app
 }
 
@@ -42,7 +44,7 @@ create_default_setup() {
     mkdir -p default && cp -r /usr/app/mount/laravel-app/* default
   fi
   cd default &&
-    zip default.zip . &&
+    zip -r default.zip . &&
     mv default.zip /usr/app
 }
 
