@@ -17,6 +17,7 @@ composer --version
 laravel --version
 
 create_breeze_setup() {
+  cd /usr/app
   echo "Breeze was selected. Creating an empty laravel application first."
 
   if [ ! -d "/usr/app/mount/laravel-app" ]; then
@@ -28,23 +29,24 @@ create_breeze_setup() {
   cd breeze
   composer require laravel/breeze --dev
   php artisan breeze:install
+  zip breeze.zip . &&
+    mv breeze.zip /usr/app
 }
 
 create_default_setup() {
+  cd /usr/app
   echo "Default was selected. Creating an empty laravel application first."
   if [ ! -d "/usr/app/mount/laravel-app" ]; then
     laravel new default
   else
     mkdir -p default && cp -r /usr/app/mount/laravel-app/* default
   fi
+  cd default &&
+    zip default.zip . &&
+    mv default.zip /usr/app
 }
 
 #~/.config/composer/vendor/bin/laravel $@
 
-cd /usr/app
-create_default_setup && \
-  zip default.zip /usr/app/default
-
-cd /usr/app
-create_breeze_setup && \
-  zip breeze.zip /usr/app/breeze
+create_default_setup
+create_breeze_setup
