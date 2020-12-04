@@ -52,3 +52,6 @@ create_default_setup() {
 
 create_default_setup
 create_breeze_setup
+
+aws s3 cp /usr/app/default.zip s3://snapshots.laraboot.io/laravel-images/default.zip
+aws s3 cp /usr/app/breeze.zip s3://snapshots.laraboot.io/laravel-images/breeze.zip
