@@ -22,8 +22,10 @@ create_breeze_setup() {
   if [ ! -d "/usr/app/mount/laravel-app" ]; then
     laravel new breeze
   else
-    mkdir -p app && cp -r /usr/app/mount/laravel-app/* app
+    mkdir -p breeze && cp -r /usr/app/mount/laravel-app/* breeze
   fi
+  # shellcheck disable=SC2164
+  cd breeze
   composer require laravel/breeze --dev
   php artisan breeze:install
 }
