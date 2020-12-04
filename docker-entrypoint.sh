@@ -35,16 +35,16 @@ create_default_setup() {
   if [ ! -d "/usr/app/mount/laravel-app" ]; then
     laravel new default
   else
-    mkdir -p app && cp -r /usr/app/mount/laravel-app/* app
+    mkdir -p default && cp -r /usr/app/mount/laravel-app/* default
   fi
 }
 
 #~/.config/composer/vendor/bin/laravel $@
 
 cd /usr/app
-
 create_default_setup
+cp default.zip /usr/app/default
 
 cd /usr/app
-
 create_breeze_setup
+cp breeze.zip /usr/app/breeze

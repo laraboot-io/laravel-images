@@ -41,4 +41,5 @@ jobs:
         with:
           name: Images
           path: |
-            app
+            app/default.zip
+            app/breeze.zip
