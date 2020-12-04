@@ -55,4 +55,4 @@ jobs:
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
           aws_bucket: "snapshots.laraboot.io"
           destination_dir: 'laravel-images'
-          source_dir: 'dirname'
+          source_dir: 'app/dist'
