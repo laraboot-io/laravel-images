@@ -1,0 +1,44 @@
+name: Docker-development
+
+on:
+  push:
+    # Publish `master` as Docker `latest` image.
+    branches:
+      - dev
+      - feature/*
+
+    # Publish `v1.2.3` tags as releases.
+    tags:
+      - v*
+
+  # Run tests for any PRs.
+  pull_request:
+
+env:
+  IMAGE_NAME: builder
+
+jobs:
+  # Run tests.
+  # See also https://docs.docker.com/docker-hub/builds/automated-testing/
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build images
+        run: |
+          export USER_ID="$(id -u)"
+          export GROUP_ID="$(id -g)"
+          export CURRENT_UID=$USER_ID:$GROUP_ID
+          mkdir -p app
+          # Build the entrypoint for our docker image
+          docker build . --file Dockerfile.builder -t script-builder
+          docker run -v $(pwd)/app:/usr/app --name builder script-builder
+          ls app
+#          sudo chmod -R +x+r app
+#          sudo chown -R $CURRENT_UID bin
+      - name: Archive script artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Images
+          path: |
+            app
