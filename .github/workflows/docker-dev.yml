@@ -45,7 +45,14 @@ jobs:
       - name: Archive script artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: Images
+          name: images
           path: |
-            app/default.zip
-            app/breeze.zip
+            app/dist/default.zip
+            app/dist/breeze.zip
+      - uses: shallwefootball/s3-upload-action@master
+        with:
+          aws_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+          aws_bucket: "snapshots.laraboot.io"
+          destination_dir: 'laravel-images'
+          source_dir: 'dirname'

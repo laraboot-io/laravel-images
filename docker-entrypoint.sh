@@ -32,7 +32,7 @@ create_breeze_setup() {
   npm install && npm run dev
 
   zip -qr breeze.zip . &&
-    mv breeze.zip /usr/app
+    mv breeze.zip /usr/app/dist
 }
 
 create_default_setup() {
@@ -45,13 +45,14 @@ create_default_setup() {
   fi
   cd default &&
     zip -qr default.zip . &&
-    mv default.zip /usr/app
+    mv default.zip /usr/app/dist
 }
 
 #~/.config/composer/vendor/bin/laravel $@
 
+mkdir -p /usr/app/dist
 create_default_setup
 create_breeze_setup
 
-aws s3 cp /usr/app/default.zip s3://snapshots.laraboot.io/laravel-images/default.zip
-aws s3 cp /usr/app/breeze.zip s3://snapshots.laraboot.io/laravel-images/breeze.zip
+#aws s3 cp /usr/app/default.zip s3://snapshots.laraboot.io/laravel-images/default.zip
+#aws s3 cp /usr/app/breeze.zip s3://snapshots.laraboot.io/laravel-images/breeze.zip
