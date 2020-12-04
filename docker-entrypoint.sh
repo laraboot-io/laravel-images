@@ -16,4 +16,31 @@ node -v
 composer --version
 laravel --version
 
-~/.config/composer/vendor/bin/laravel $@
+create_breeze_setup() {
+  echo "Breeze was selected. Creating an empty laravel application first."
+
+  if [ ! -d "/usr/app/mount/laravel-app" ]; then
+    laravel new breeze
+  else
+    mkdir -p app && cp -r /usr/app/mount/laravel-app/* app
+  fi
+  cd app || error_exit 'Error creating an empty laravel application' 255
+  composer require laravel/breeze --dev
+  php artisan breeze:install
+  cd ..
+}
+
+create_default_setup() {
+  echo "Default was selected. Creating an empty laravel application first."
+  if [ ! -d "/usr/app/mount/laravel-app" ]; then
+    laravel new default
+  else
+    mkdir -p app && cp -r /usr/app/mount/laravel-app/* app
+  fi
+  cd app || error_exit 'Error creating an empty laravel application' 255
+  cd ..
+}
+
+#~/.config/composer/vendor/bin/laravel $@
+
+$@
