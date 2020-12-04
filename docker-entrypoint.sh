@@ -42,9 +42,9 @@ create_default_setup() {
 #~/.config/composer/vendor/bin/laravel $@
 
 cd /usr/app
-create_default_setup
-cp default.zip /usr/app/default
+create_default_setup && \
+  zip default.zip /usr/app/default
 
 cd /usr/app
-create_breeze_setup
-cp breeze.zip /usr/app/breeze
+create_breeze_setup && \
+  zip breeze.zip /usr/app/breeze
