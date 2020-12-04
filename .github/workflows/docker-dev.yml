@@ -31,7 +31,7 @@ jobs:
           export CURRENT_UID=$USER_ID:$GROUP_ID
           mkdir -p app
           # Build the entrypoint for our docker image
-          docker build . --file Dockerfile.builder -t script-builder
+          docker build . --file Dockerfile -t script-builder
           docker run -v $(pwd)/app:/usr/app --name builder script-builder
           ls app
 #          sudo chmod -R +x+r app
