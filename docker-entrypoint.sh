@@ -17,7 +17,7 @@ composer --version
 laravel --version
 
 composer_cmd() {
-  echo "🧙 Running composer command : $@"
+  echo "🧙 Running composer command : $*"
   composer "$@"
 }
 
