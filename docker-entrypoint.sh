@@ -16,6 +16,17 @@ node -v
 composer --version
 laravel --version
 
+composer_cmd() {
+  log "🧙 Running composer command : $@"
+  composer "$@"
+}
+
+require_dev(){
+  composer_cmd require --dev laravel-shift/blueprint
+  composer_cmd require --dev oscarnevarezleal/laravel-sed:dev-dev
+  composer_cmd require --dev jasonmccreary/laravel-test-assertions
+}
+
 create_breeze_setup() {
   cd /usr/app
   echo "Breeze was selected. Creating an empty laravel application first."
@@ -27,6 +38,7 @@ create_breeze_setup() {
   fi
   # shellcheck disable=SC2164
   cd breeze
+  require_dev
   composer require laravel/breeze --dev
   php artisan breeze:install
   npm install && npm run dev
@@ -44,6 +56,7 @@ create_default_setup() {
     mkdir -p default && cp -r /usr/app/mount/laravel-app/* default
   fi
   cd default &&
+    require_dev &&
     zip -qr default.zip . &&
     mv default.zip /usr/app/dist
 }
