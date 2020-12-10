@@ -43,9 +43,10 @@ create_breeze_setup() {
   fi
   # shellcheck disable=SC2164
   cd breeze
-  require_dev
-  composer require laravel/breeze --dev
-  php artisan breeze:install
+  require_dev &&
+  composer_cmd update &&
+  composer require laravel/breeze --dev  &&
+  php artisan breeze:install  &&
   npm install && npm run dev
 
   zip -qr breeze.zip . &&
@@ -62,6 +63,7 @@ create_default_setup() {
   fi
   cd default &&
     require_dev &&
+    composer_cmd update &&
     zip -qr default.zip . &&
     mv default.zip /usr/app/dist
 }
