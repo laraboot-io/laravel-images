@@ -67,6 +67,7 @@ WORKDIR /usr/app
 
 RUN if [[ -z "$INSTALL_RECOMMENDED" ]] ; then echo "INSTALL_RECOMMENDED not provided" ; else scripts/require.sh ; fi
 
+RUN scripts/default-setup.sh
 RUN scripts/breeze-setup.sh
 RUN scripts/inertia-setup.sh
 
