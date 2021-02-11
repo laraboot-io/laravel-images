@@ -39,7 +39,7 @@ jobs:
           # Build the entrypoint for our docker image
           docker build . --file Dockerfile -t script-builder
           docker run -v $(pwd)/app:/usr/app --name builder script-builder
-          ls app
+          ls app/dist
 #          sudo chmod -R +x+r app
 #          sudo chown -R $CURRENT_UID bin
       - name: Archive script artifacts
@@ -48,6 +48,7 @@ jobs:
           name: images
           path: |
             app/dist/default.zip
+            app/dist/inertia.zip
             app/dist/breeze.zip
       - uses: shallwefootball/s3-upload-action@master
         with:

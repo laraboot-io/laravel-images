@@ -69,6 +69,6 @@ RUN if [[ -z "$INSTALL_RECOMMENDED" ]] ; then echo "INSTALL_RECOMMENDED not prov
 
 RUN scripts/breeze-setup.sh
 RUN scripts/inertia-setup.sh
-RUN ls -ltah /usr/app/dist
+
 VOLUME /usr/app/dist
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]

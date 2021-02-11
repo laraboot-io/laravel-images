@@ -15,3 +15,5 @@ php -m
 node -v
 composer --version
 laravel --version
+
+ls -ltah /usr/app/dist
