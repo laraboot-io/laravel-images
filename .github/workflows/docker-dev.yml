@@ -37,7 +37,7 @@ jobs:
           export CURRENT_UID=$USER_ID:$GROUP_ID
           # Build the entrypoint for our docker image
           docker build . --file Dockerfile -t script-builder
-          mkdir -p app/dist
+          mkdir -p app
           docker run -v $(pwd)/app:/usr/app --name builder script-builder
           echo "Execution ends here"
           echo "List dist directory"
