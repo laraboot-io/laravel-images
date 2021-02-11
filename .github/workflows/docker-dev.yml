@@ -38,7 +38,7 @@ jobs:
           mkdir -p app/dist
           # Build the entrypoint for our docker image
           docker build . --file Dockerfile -t script-builder
-          docker run -v $(pwd)/app:/usr/app --name builder script-builder
+          docker run -v $(pwd)/app/dist:/usr/app/dist --name builder script-builder
           echo "Execution ends here"
           ls app/dist
       - uses: shallwefootball/s3-upload-action@master
