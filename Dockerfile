@@ -1,4 +1,5 @@
 FROM amazonlinux:2
+ARG INSTALL_RECOMMENDED=1
 MAINTAINER "Oscar Nevarez" <fu.wire@gmail.com>
 
 # |--------------------------------------------------------------------------
@@ -17,7 +18,6 @@ ARG USER_ID=1001
 
 RUN yum update -y \
     && yum install -y yum-utils shadow-utils amazon-linux-extras \
-    #    amazon-linux-extras | grep php && \
     && amazon-linux-extras enable php${PHP_VERSION} \
     && yum install -y which git jq zip unzip tar wget  \
     && yum install -y yum install php php-common php-pear \
@@ -28,16 +28,14 @@ RUN yum update -y \
 RUN useradd -u $USER_ID docker
 RUN groupmod -g $GROUP_ID docker
 
-RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscli-exe-linux-x86_64.zip" \
-    && yum update -y \
-    && yum install -y unzip \
-    && unzip -qq awscli-exe-linux-x86_64.zip \
-    && ./aws/install --bin-dir /usr/local/bin
+WORKDIR /usr/app
 
-RUN mkdir -p /usr/app \
+RUN mkdir -p /usr/app/dist \
     && chown -R docker:$GROUP_ID /usr/app
 
+ADD scripts scripts
 ADD docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod -R ugo+rx scripts
 RUN chmod -R ugo+rx /usr/local/bin/docker-entrypoint.sh
 
 # install node and npm
@@ -66,5 +64,10 @@ RUN composer global require laravel/installer \
 ENV PATH "~/.config/composer/vendor/bin:~/.composer/vendor/bin:/usr/local/bin:$PATH"
 
 WORKDIR /usr/app
+
+RUN if [[ -z "$INSTALL_RECOMMENDED" ]] ; then echo "INSTALL_RECOMMENDED not provided" ; else scripts/require.sh ; fi
+
+RUN scripts/breeze-setup.sh
+RUN scripts/inertia-setup.sh
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
