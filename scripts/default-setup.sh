@@ -16,11 +16,7 @@ cd /usr/app
 
 echo "🧙 Default was selected. Creating an empty laravel application first."
 
-if [ ! -d "/usr/app/mount/laravel-app" ]; then
-  laravel new default
-else
-  mkdir -p default && cp -r /usr/app/mount/laravel-app/* default
-fi
+mkdir -p default && cp -r /usr/app/mount/laravel-app/* default
 
 # shellcheck disable=SC2164
 cd default &&
@@ -28,3 +24,5 @@ cd default &&
   composer_cmd update &&
   zip -qr default.zip . &&
   mv default.zip /usr/app/dist
+
+ls /usr/app/dist

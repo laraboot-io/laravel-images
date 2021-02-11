@@ -38,7 +38,10 @@ jobs:
           # Build the entrypoint for our docker image
           docker build . --file Dockerfile -t script-builder
           mkdir -p app
-          docker run -v $(pwd)/app:/usr/app --name builder script-builder
+          docker run --name builder script-builder
+          docker cp builder:/usr/app/dist/inertia.zip app/dist
+          docker cp builder:/usr/app/dist/breeze.zip app/dist
+          docker cp builder:/usr/app/dist/default.zip app/dist
           echo "Execution ends here"
           echo "List dist directory"
           ls -lth app/dist

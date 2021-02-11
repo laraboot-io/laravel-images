@@ -31,6 +31,7 @@ RUN groupmod -g $GROUP_ID docker
 WORKDIR /usr/app
 
 RUN mkdir -p /usr/app/dist \
+	&& mkdir -p /usr/app/mount \
     && chown -R docker:$GROUP_ID /usr/app
 
 ADD scripts scripts
@@ -63,12 +64,18 @@ RUN composer global require laravel/installer \
 
 ENV PATH "~/.config/composer/vendor/bin:~/.composer/vendor/bin:/usr/local/bin:$PATH"
 
+# Base scaffolding
+WORKDIR /usr/app/mount
+RUN laravel new laravel-app
+
 WORKDIR /usr/app
 
-RUN if [[ -z "$INSTALL_RECOMMENDED" ]] ; then echo "INSTALL_RECOMMENDED not provided" ; else scripts/require.sh ; fi
+#RUN if [[ -z "$INSTALL_RECOMMENDED" ]] ; then echo "INSTALL_RECOMMENDED not provided" ; else scripts/require.sh ; fi
 
 RUN scripts/default-setup.sh
 RUN scripts/breeze-setup.sh
 RUN scripts/inertia-setup.sh
 
+VOLUME /usr/app/dist
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+CMD ["laravel", "--version"]
