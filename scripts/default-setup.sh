@@ -6,8 +6,13 @@
 #       / /___/ /_/ / /  / /_/ / /_/ / /_/ / /_/ / /_
 #      /_________,_/_/   \__,_/_.___/\____/\____/\__/
 #
+composer_cmd() {
+  echo "🧙 Running composer command : $*"
+  composer "$@"
+}
 
 cd /usr/app
+
 
 echo "🧙 Default was selected. Creating an empty laravel application first."
 
@@ -18,8 +23,8 @@ else
 fi
 
 # shellcheck disable=SC2164
-cd default
-/usr/app/scripts/require.sh
-
-zip -qr default.zip . &&
+cd default &&
+  /usr/app/scripts/require.sh &&
+  composer_cmd update &&
+  zip -qr default.zip . &&
   mv default.zip /usr/app/dist

@@ -71,5 +71,4 @@ RUN scripts/default-setup.sh
 RUN scripts/breeze-setup.sh
 RUN scripts/inertia-setup.sh
 
-VOLUME /usr/app
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
