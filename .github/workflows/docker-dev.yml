@@ -35,7 +35,7 @@ jobs:
           export USER_ID="$(id -u)"
           export GROUP_ID="$(id -g)"
           export CURRENT_UID=$USER_ID:$GROUP_ID
-          mkdir -p app
+          mkdir -p app/dist
           # Build the entrypoint for our docker image
           docker build . --file Dockerfile -t script-builder
           docker run -v $(pwd)/app:/usr/app --name builder script-builder
