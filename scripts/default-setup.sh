@@ -22,6 +22,7 @@ mkdir -p default && cp -r /usr/app/mount/laravel-app/* default
 cd default &&
   /usr/app/scripts/require.sh &&
   composer_cmd update &&
+  composer_cmd dump-autoload -o --apcu &&
   zip -qr default.zip . &&
   mv default.zip /usr/app/dist
 

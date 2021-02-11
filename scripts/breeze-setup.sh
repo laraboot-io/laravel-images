@@ -25,6 +25,7 @@ cd breeze
 composer_cmd update &&
 composer require laravel/breeze --dev &&
 php artisan breeze:install &&
+composer_cmd dump-autoload -o --apcu &&
 npm install &&
 npm run dev
 

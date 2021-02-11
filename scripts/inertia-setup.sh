@@ -18,8 +18,10 @@ else
 fi
 # shellcheck disable=SC2164
 cd inertia
+
 /usr/app/scripts/require.sh && composer require inertiajs/inertia-laravel &&
-  npm install
+composer_cmd dump-autoload -o --apcu &&
+npm install
 
 zip -qr inertia.zip . &&
   mv inertia.zip /usr/app/dist
