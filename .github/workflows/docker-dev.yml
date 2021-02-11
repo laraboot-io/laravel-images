@@ -37,7 +37,7 @@ jobs:
           export CURRENT_UID=$USER_ID:$GROUP_ID
           # Build the entrypoint for our docker image
           docker build . --file Dockerfile -t script-builder
-          mkdir -p app
+          mkdir -p app/dist
           docker run --name builder script-builder
           docker cp builder:/usr/app/dist/inertia.zip app/dist
           docker cp builder:/usr/app/dist/breeze.zip app/dist
