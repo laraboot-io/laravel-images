@@ -87,18 +87,23 @@ jobs:
         run: php -r "file_exists('.env') || copy('.env.example', '.env');"
       - name: Install Dependencies
         if: steps.vendor-cache.outputs.cache-hit != 'true'
+        working-directory: ./app
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
       - name: Update Dependencies with latest stable
         if: matrix.dependency-stability == 'prefer-stable'
+        working-directory: ./app
         run: composer update --prefer-stable
       - name: Update Dependencies with lowest stable
         if: matrix.dependency-stability == 'prefer-lowest'
+        working-directory: ./app
         run: composer update --prefer-stable --prefer-lowest
 
       - name: Generate key
+        working-directory: ./app
         run: php artisan key:generate
       - name: Directory Permissions
+        working-directory: ./app
         run: chmod -R 777 storage bootstrap/cache
       - name: Run Migrations
         # Set environment
@@ -117,6 +122,7 @@ jobs:
 
       # Code quality
       - name: Execute tests (Unit and Feature tests) via PHPUnit
+        working-directory: ./app
         # Set environment
         env:
           DB_CONNECTION: mysql
@@ -129,11 +135,13 @@ jobs:
 
 
       - name: Execute Code Sniffer via phpcs
+        working-directory: ./app
         run: |
           composer require --dev squizlabs/php_codesniffer
           vendor/bin/phpcs --standard=PSR12 app
 
       - name: Execute Code Static Analysis (PHP Stan + Larastan)
+        working-directory: ./app
         run: |
           composer require --dev nunomaduro/larastan
           vendor/bin/phpstan analyse app -c ./vendor/nunomaduro/larastan/extension.neon  --level=4 --no-progress
