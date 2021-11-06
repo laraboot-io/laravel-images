@@ -106,6 +106,7 @@ jobs:
         working-directory: ./app
         run: chmod -R 777 storage bootstrap/cache
       - name: Run Migrations
+        working-directory: ./app
         # Set environment
         env:
           DB_CONNECTION: mysql
@@ -128,7 +129,7 @@ jobs:
           DB_CONNECTION: mysql
           DB_DATABASE: db_test_laravel
           DB_PORT: 33306
-          DB_USER: root
+          DB_USER: rootf
 
         run: vendor/bin/phpunit --testdox
 
