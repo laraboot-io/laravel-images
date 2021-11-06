@@ -129,16 +129,14 @@ jobs:
 
         run: vendor/bin/phpunit --testdox
 
-
-
-      - name: Execute Code Sniffer via phpcs
-        working-directory: ./app
-        run: |
-          composer require --dev squizlabs/php_codesniffer
-          vendor/bin/phpcs --standard=PSR12 app
-
-      - name: Execute Code Static Analysis (PHP Stan + Larastan)
-        working-directory: ./app
-        run: |
-          composer require --dev nunomaduro/larastan
-          vendor/bin/phpstan analyse app -c ./vendor/nunomaduro/larastan/extension.neon  --level=4 --no-progress
+      #      - name: Execute Code Sniffer via phpcs
+      #        working-directory: ./app
+      #        run: |
+      #          composer require --dev squizlabs/php_codesniffer
+      #          vendor/bin/phpcs --standard=PSR12 app
+      #
+      #      - name: Execute Code Static Analysis (PHP Stan + Larastan)
+      #        working-directory: ./app
+      #        run: |
+      #          composer require --dev nunomaduro/larastan
+      #          vendor/bin/phpstan analyse app -c ./vendor/nunomaduro/larastan/extension.neon  --level=4 --no-progress
