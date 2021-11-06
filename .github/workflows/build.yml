@@ -34,7 +34,7 @@ jobs:
       matrix:
         operating-system: [ ubuntu-latest ]
         php-versions: [ '8.0','7.4' ]
-        dependency-stability: [ 'prefer-none' ]
+        dependency-stability: [ 'prefer-stable' ]
 
     name: P${{ matrix.php-versions }} - L${{ matrix.laravel }} - ${{ matrix.dependency-stability }} - ${{ matrix.operating-system}}
 
@@ -83,8 +83,8 @@ jobs:
         with:
           path: vendor
           key: ${{ runner.OS }}-build-${{ hashFiles('**/composer.lock') }}
-      - name: Copy .env
-        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+      #      - name: Copy .env
+      #        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
       - name: Install Dependencies
         if: steps.vendor-cache.outputs.cache-hit != 'true'
         working-directory: ./app
