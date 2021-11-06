@@ -50,6 +50,12 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.OS }}-build-${{ hashFiles('**/package.json') }}-${{ hashFiles('**/package-lock.json') }}
+      - name: Setup laravel installer
+        run: |
+          composer global require laravel/installer
+      - name: Create laravel application
+        run: |
+          laravel new apps
       #      - name: Install NPM packages
       #        if: steps.node_modules-cache.outputs.cache-hit != 'true'
       #        run: npm ci
