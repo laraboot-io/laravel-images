@@ -138,10 +138,6 @@ jobs:
       - build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2.2.0
-        with:
-          token: ${{ secrets.GH_TOKEN }}
-          fetch-depth: 0
       - uses: GoogleCloudPlatform/release-please-action@v2
         id: release
         with:
