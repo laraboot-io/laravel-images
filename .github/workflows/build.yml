@@ -41,7 +41,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Setup Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
         with:
           node-version: '15.x'
       - name: Cache node_modules directory
@@ -50,11 +50,11 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.OS }}-build-${{ hashFiles('**/package.json') }}-${{ hashFiles('**/package-lock.json') }}
-      - name: Install NPM packages
-        if: steps.node_modules-cache.outputs.cache-hit != 'true'
-        run: npm ci
-      - name: Build frontend
-        run: npm run development
+      #      - name: Install NPM packages
+      #        if: steps.node_modules-cache.outputs.cache-hit != 'true'
+      #        run: npm ci
+      #      - name: Build frontend
+      #        run: npm run development
       - name: Install PHP versions
         uses: shivammathur/setup-php@v2
         with:
