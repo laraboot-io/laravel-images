@@ -89,7 +89,7 @@ jobs:
       - name: Install Dependencies
         if: steps.vendor-cache.outputs.cache-hit != 'true'
         working-directory: ./app
-        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+        run: pwd && ls && composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
       - name: Update Dependencies with latest stable
         if: matrix.dependency-stability == 'prefer-stable'
