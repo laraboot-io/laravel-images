@@ -150,12 +150,6 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: app
-      - run: |
-          tar -xzf app.tar.gz -C .
-          rm app.tar.gz
-      #      - uses: webfactory/ssh-agent@v0.5.2
-      #        with:
-      #          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - uses: dev-drprasad/delete-tag-and-release@v0.2.0
         with:
           delete_release: true # default: false
@@ -163,6 +157,11 @@ jobs:
           repo: laraboot-io/laravel-images
         env:
           GITHUB_TOKEN: ${{ secrets.ORG_TOKEN }}
+      - uses: ncipollo/release-action@v1
+        with:
+          tag: v0.1.0
+          artifacts: "app.tar.gz,foo/*.txt"
+          token: ${{ secrets.ORG_TOKEN }}
       - name: push package release
         if: ${{ steps.release.outputs.release_created }}
         run: |
