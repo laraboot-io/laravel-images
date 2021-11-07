@@ -1,7 +1,7 @@
 name: Artifact Laravel application
 on:
   schedule:
-    - cron: "*/15 * * * *"
+    - cron: "0 * * * *"
   push:
     branches:
       - dev
