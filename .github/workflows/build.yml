@@ -127,12 +127,21 @@ jobs:
         working-directory: ./app
         id: build
         run: |
+          VERSION="$(composer show -f json laravel/framework | jq -r \".versions[0]\")"
+          touch /tmp/version.txt
+          echo $VERSION >> /tmp/version.txt
           tar -czf /tmp/app.tar.gz .
+          echo "::set-output name=version::$VERSION"
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: app
           path: /tmp/app.tar.gz
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: version
+          path: /tmp/version.txt
   publish:
     needs:
       - build
@@ -151,11 +160,15 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: app
+      - name: Download app meta
+        uses: actions/download-artifact@v2
+        with:
+          name: version
       - id: dist
         run: |
           #!/usr/bin/env bash
           set -euo pipefail
-          VERSION="$(composer show -f json laravel/framework | jq -r \".versions[0]\")"
+          VERSION="$(cat version.txt)"
           echo "::set-output name=version::$VERSION"
       - uses: dev-drprasad/delete-tag-and-release@v0.2.0
         with:
