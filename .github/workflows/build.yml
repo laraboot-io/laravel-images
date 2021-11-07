@@ -127,11 +127,9 @@ jobs:
         working-directory: ./app
         id: build
         run: |
-          VERSION="$(composer show -f json laravel/framework | jq -r \".versions[0]\")"
-          touch /tmp/version.txt
-          echo $VERSION >> /tmp/version.txt
+          composer show -f json laravel/framework | jq -r ".versions[0]"
+          composer show -f json laravel/framework | jq -r ".versions[0]" > /tmp/version.txt
           tar -czf /tmp/app.tar.gz .
-          echo "::set-output name=version::$VERSION"
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
