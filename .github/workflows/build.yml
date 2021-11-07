@@ -138,6 +138,7 @@ jobs:
       - build
     runs-on: ubuntu-latest
     steps:
+      - uses: buildpacks/github-actions/setup-pack@v4.4.2
       - uses: GoogleCloudPlatform/release-please-action@v2
         id: release
         with:
@@ -150,65 +151,21 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: app
+      - id: dist
+        run: |
+          #!/usr/bin/env bash
+          set -euo pipefail
+          VERSION="$(composer show -f json laravel/framework | jq -r \".versions[0]\")"
+          echo "::set-output name=version::$VERSION"
       - uses: dev-drprasad/delete-tag-and-release@v0.2.0
         with:
           delete_release: true # default: false
-          tag_name: v0.1.0 # tag name to delete
+          tag_name: ${{ steps.dist.outputs.version }}
           repo: laraboot-io/laravel-images
         env:
           GITHUB_TOKEN: ${{ secrets.ORG_TOKEN }}
       - uses: ncipollo/release-action@v1
         with:
-          tag: v0.1.0
+          tag: ${{ steps.dist.outputs.version }}
           artifacts: "app.tar.gz,foo/*.txt"
           token: ${{ secrets.ORG_TOKEN }}
-      - name: push package release
-        if: ${{ steps.release.outputs.release_created }}
-        run: |
-          git remote set-url origin "$(git config --get remote.origin.url | sed 's#http.*com/#git@github.com:#g')"
-          git config --local user.email "$(git log --format='%ae' HEAD^!)"
-          git config --local user.name "$(git log --format='%an' HEAD^!)"
-          git checkout -b 1.x
-          git add dist
-          git commit -a -m 'chore: ${{ steps.release.outputs.tag_name }} release'
-          git push -f --set-upstream origin 1.x
-      - name: Get Previous tag
-        id: previoustag
-        if: ${{ steps.release.outputs.release_created }}
-        uses: WyriHaximus/github-action-get-previous-tag@v1
-        env:
-          GITHUB_TOKEN: "${{ secrets.ORG_TOKEN }}"
-      - name: Get next minor version
-        id: semvers
-        if: ${{ steps.release.outputs.release_created }}
-        uses: WyriHaximus/github-action-next-semvers@v1
-        with:
-          version: ${{ steps.previoustag.outputs.tag }}
-      - name: Output next version
-        if: ${{ steps.release.outputs.release_created }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo  "version: ${{ steps.semvers.outputs.patch }}"
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '15.x'
-      - name: Semantic Release
-        if: ${{ steps.release.outputs.release_created }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: |
-          npx semantic-release --debug --ci false
-      #      - name: Execute Code Sniffer via phpcs
-      #        working-directory: ./app
-      #        run: |
-      #          composer require --dev squizlabs/php_codesniffer
-      #          vendor/bin/phpcs --standard=PSR12 app
-      #
-      #      - name: Execute Code Static Analysis (PHP Stan + Larastan)
-      #        working-directory: ./app
-      #        run: |
-      #          composer require --dev nunomaduro/larastan
-      #          vendor/bin/phpstan analyse app -c ./vendor/nunomaduro/larastan/extension.neon  --level=4 --no-progress
