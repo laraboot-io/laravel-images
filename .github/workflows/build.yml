@@ -1,12 +1,11 @@
-# GithHub Actions Workflow generated with Ghygen
-# Original configuration: https://ghygen.hi-folks.dev?code=e08ece9f55435c335d815a3c3348e939
-name: Template - Laravel application (Mysql)
+name: Artifact Laravel application
 on:
+  schedule:
+    - cron: "*/15 * * * *"
   push:
     branches:
-      - main
       - dev
-      - features/**
+      - feature/**
 
 jobs:
   build:
@@ -127,7 +126,6 @@ jobs:
         working-directory: ./app
         id: build
         run: |
-          composer show -f json laravel/framework | jq -r ".versions[0]"
           composer show -f json laravel/framework | jq -r ".versions[0]" > /tmp/version.txt
           tar -czf /tmp/app.tar.gz .
       - name: Upload artifact
