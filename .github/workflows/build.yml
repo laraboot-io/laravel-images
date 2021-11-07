@@ -175,6 +175,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.ORG_TOKEN }}
       - uses: ncipollo/release-action@v1
         with:
+          allowUpdates: true
           tag: ${{ steps.dist.outputs.version }}
           artifacts: "app.tar.gz,foo/*.txt"
           token: ${{ secrets.ORG_TOKEN }}
