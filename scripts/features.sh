@@ -63,12 +63,12 @@ function main() {
 
   laraboot::install
 
-  tmpdir=$(mktemp -d)
+  ftdir=$(mktemp -d)
 
-  laraboot::setup-starterkit $withBreeze $withJetstream $tmpdir
-  laraboot::build
+  laraboot::setup-starterkit $withBreeze $withJetstream $ftdir
   # in the form of `from directory` `into directory`
-  laraboot::merge $tmpdir $LARAVEL_DIR_APP
+  laraboot::merge $ftdir/app $LARAVEL_DIR_APP
+  laraboot::build
 
 }
 
@@ -122,6 +122,8 @@ function laraboot::merge(){
   source=$1
   dest=$2
   echo "merge $source -> $dest"
+  ls $source
+  ls $dest
 }
 
 main "${@:-}"
