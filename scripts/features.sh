@@ -113,8 +113,12 @@ function laraboot::setup-starterkit() {
   cat $buildpackFile >> buildpack.yml
   laraboot build -vvv
   docker images $appName
+
+  workspace=$(mktemp -d)
   sid=$(docker run -d $appName --entrypoint willfail)
-  docker cp $sid:/workspace ./
+  docker cp $sid:/workspace $workspace
+  # not interested in the vendor folder
+  rm -rf $workspace/vendor
   laraboot::merge $cwd/$appName/workspace $LARAVEL_DIR_APP
 }
 

@@ -228,6 +228,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
       - uses: ncipollo/release-action@v1
+        id: release
         with:
           allowUpdates: true
           # Pending. I need to check the status code in case the release hasn't been published in Github repository yet
@@ -237,3 +238,7 @@ jobs:
           artifacts: "artifacts/**/*.tar.gz,checksums.*"
           removeArtifacts: true
           token: ${{ secrets.RELEASE_TOKEN }}
+      - run: |
+          echo ${{ steps.release.outputs.id }}
+          echo ${{ steps.release.outputs.html_url }}
+          echo ${{ steps.release.outputs.upload_url }}
