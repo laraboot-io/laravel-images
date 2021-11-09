@@ -241,7 +241,7 @@ jobs:
         with:
           author_name: LarabootBot
           author_email: no-reply@laraboot.io
-          message: 'chore: Release-As: ${{ steps.dist.outputs.version }}'
+          message: 'Release-As: ${{ steps.dist.outputs.version }}'
           push: false
           add: '*.json'
       - uses: GoogleCloudPlatform/release-please-action@v2
