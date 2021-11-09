@@ -234,6 +234,6 @@ jobs:
           #          bodyFile: notes.md
           bodyFile: release.md
           tag: ${{ steps.dist.outputs.version }}
-          artifacts: "artifacts/**/*.tar.gz,checksums.md5"
+          artifacts: "artifacts/**/*.tar.gz,checksums.*"
           removeArtifacts: true
           token: ${{ secrets.RELEASE_TOKEN }}
