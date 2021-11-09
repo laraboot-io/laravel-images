@@ -233,7 +233,6 @@ jobs:
           # Pending. I need to check the status code in case the release hasn't been published in Github repository yet
           #          bodyFile: notes.md
           bodyFile: release.md
-          omitBody: true
           tag: ${{ steps.dist.outputs.version }}
           artifacts: "artifacts/**/*.tar.gz,checksums.md5"
           removeArtifacts: true
