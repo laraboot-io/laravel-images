@@ -204,6 +204,7 @@ jobs:
           #!/usr/bin/env bash
           set -euo pipefail
           VERSION="$(cat artifacts/version/version.txt)"
+          curl -s https://api.github.com/repos/laravel/framework/releases/tags/$VERSION > notes.md
           echo "::set-output name=version::$VERSION"
       - uses: buildpacks/github-actions/setup-pack@v4.4.2
       - uses: GoogleCloudPlatform/release-please-action@v2
@@ -224,6 +225,7 @@ jobs:
       - uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
+          bodyFile: notes.md
           tag: ${{ steps.dist.outputs.version }}
           artifacts: "artifacts/*.tar.gz,artifacts/**/*.tar.gz"
           token: ${{ secrets.RELEASE_TOKEN }}
