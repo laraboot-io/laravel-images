@@ -1,3 +1,3 @@
 #!/bin/bash
 shopt -s globstar
-md5sum **/*.tar.gz > checksums.md5
+find . -name *.tar.gz -type f -print0 | xargs -0 md5sum
