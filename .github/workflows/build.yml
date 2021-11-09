@@ -231,8 +231,8 @@ jobs:
           removeArtifacts: true
           token: ${{ secrets.RELEASE_TOKEN }}
       - run: |
-          readonly releaseid=${{ steps.xrelease.outputs.id }}
-          readonly releaselink=echo ${{ steps.xrelease.outputs.html_url }}
+          readonly releaseid="${{ steps.xrelease.outputs.id }}"
+          readonly releaselink="${{ steps.xrelease.outputs.html_url }}"
           jq '.releases[.releases| length] |= . + {"name": "${{ steps.dist.outputs.version }}", "link": "$releaselink"}' registry.json > registry-mod.json
           mv registry-mod.json registry.json
           cat registry.json
