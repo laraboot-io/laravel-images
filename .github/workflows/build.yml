@@ -203,7 +203,7 @@ jobs:
         run: |
           #!/usr/bin/env bash
           set -euo pipefail
-          VERSION="$(cat artifacts/version.txt)"
+          VERSION="$(cat artifacts/version)"
           echo "::set-output name=version::$VERSION"
       - uses: buildpacks/github-actions/setup-pack@v4.4.2
       - uses: GoogleCloudPlatform/release-please-action@v2
