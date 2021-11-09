@@ -153,6 +153,10 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '15.x'
+      - name: Install PHP versions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
       - name: Download base artifact
         uses: actions/download-artifact@v2
         with:
