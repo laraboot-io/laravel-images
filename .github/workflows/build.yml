@@ -183,11 +183,13 @@ jobs:
           pushd ${cwd}/${dirname}
           tar -czf /tmp/app-${{ matrix.flavor }}.tar.gz .
           popd
+
+          ls /tmp/app-${{ matrix.flavor }}.tar.gz
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.flavor }}-app
-          path: /tmp/${{ matrix.flavor }}-app.tar.gz
+          path: /tmp/app-${{ matrix.flavor }}.tar.gz
   publish:
     needs:
       - features
