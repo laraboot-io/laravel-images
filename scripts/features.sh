@@ -103,7 +103,7 @@ function laraboot::setup-starterkit() {
   fi
 
   cd $cwd
-  laraboot new app --php-version=8.0
+  laraboot new app --php-version=8.0.*
   cd app
   laraboot task add @core/laravel-starterkit-buildpack --format=file
   laraboot task add nodejs --imageUri=gcr.io/paketo-buildpacks/nodejs --format=external --prepend -vvv
