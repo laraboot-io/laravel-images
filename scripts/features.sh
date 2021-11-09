@@ -106,6 +106,7 @@ function laraboot::setup-starterkit() {
   laraboot new app
   cd app
   laraboot task add @core/laravel-starterkit-buildpack --format=file
+  laraboot task add nodejs --imageUri=gcr.io/paketo-buildpacks/nodejs --format=external --prepend -vvv
   cat $buildpackFile >> buildpack.yml
   laraboot build -vvv
   docker images
