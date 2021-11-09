@@ -166,6 +166,7 @@ jobs:
           #!/usr/bin/env bash
           set -euo pipefail
           VERSION="$(cat version.txt)"
+          sudo chmod 666 /var/run/docker.sock
           chmod +x ./scripts/features.sh
           ./scripts/features.sh ${{ matrix.flavor }}
   publish:
