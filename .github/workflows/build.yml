@@ -204,6 +204,8 @@ jobs:
           #!/usr/bin/env bash
           set -euo pipefail
           VERSION="$(cat artifacts/version/version.txt)"
+          chmod +x ./scripts/checksums.sh
+          ./scripts/checksums.sh
           curl -s https://api.github.com/repos/laravel/framework/releases/tags/$VERSION > notes.md
           echo "::set-output name=version::$VERSION"
       - uses: buildpacks/github-actions/setup-pack@v4.4.2
@@ -225,7 +227,8 @@ jobs:
       - uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
-          bodyFile: notes.md
+          # Pending. I need to check the status code in case the release hasn't been published in Github repository yet
+          #          bodyFile: notes.md
           tag: ${{ steps.dist.outputs.version }}
-          artifacts: "artifacts/*.tar.gz,artifacts/**/*.tar.gz"
+          artifacts: "artifacts/*.tar.gz,artifacts/**/*.tar.gz,checksums.md5"
           token: ${{ secrets.RELEASE_TOKEN }}
