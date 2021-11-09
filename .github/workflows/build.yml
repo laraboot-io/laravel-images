@@ -177,7 +177,7 @@ jobs:
           chmod +x ./scripts/features.sh
           LARAVEL_DIR_APP="${cwd}/${dirname}" ./scripts/features.sh "--${{ matrix.flavor }}"
 
-          pushd ${cwd}/${dirname}/${{ matrix.flavor }}
+          pushd ${cwd}/${dirname}
           tar -czf /tmp/app-${{ matrix.flavor }}.tar.gz .
           popd
       - name: Upload artifact
