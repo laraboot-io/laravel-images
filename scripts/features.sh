@@ -68,7 +68,6 @@ function main() {
   laraboot::setup-starterkit $withBreeze $withJetstream $ftdir
   # in the form of `from directory` `into directory`
   laraboot::merge $ftdir/app $LARAVEL_DIR_APP
-  laraboot::build
 
 }
 
@@ -104,10 +103,12 @@ function laraboot::setup-starterkit() {
   fi
 
   cd $cwd
-  laraboot new app --skip-laravel-installer
+  laraboot new app
   cd app
   laraboot task add @core/laravel-starterkit-buildpack --format=file
   cp $buildpackFile buildpack.yml
+  laraboot build
+  docker images
 }
 
 function laraboot::install() {
