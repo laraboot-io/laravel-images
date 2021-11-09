@@ -172,10 +172,13 @@ jobs:
           dirname=${{ matrix.flavor }}
           mkdir -p $dirname
           cwd=$(pwd)
+          # Untar base app
           tar -zxf app.tar.gz -C $dirname
           sudo chmod 666 /var/run/docker.sock
           chmod +x ./scripts/features.sh
-          LARAVEL_DIR_APP="${cwd}/${dirname}" ./scripts/features.sh "--${{ matrix.flavor }}"
+          export LARAVEL_DIR_APP="${cwd}/${dirname}"
+
+          ./scripts/features.sh "--${{ matrix.flavor }}"
 
           pushd ${cwd}/${dirname}
           tar -czf /tmp/app-${{ matrix.flavor }}.tar.gz .
@@ -183,8 +186,8 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: app-with-${{ matrix.flavor }}
-          path: /tmp/app-${{ matrix.flavor }}.tar.gz
+          name: ${{ matrix.flavor }}-app
+          path: /tmp/${{ matrix.flavor }}-app.tar.gz
   publish:
     needs:
       - features
@@ -199,14 +202,10 @@ jobs:
           command: release-pr
           package-name: "laravel-snapshot"
           bump-minor-pre-major: false
-      - name: Download app artifact
+      - name: Download artifacts
         uses: actions/download-artifact@v2
         with:
-          name: app
-      - name: Download app meta
-        uses: actions/download-artifact@v2
-        with:
-          name: version
+          path: artifacts
       - id: dist
         run: |
           #!/usr/bin/env bash
