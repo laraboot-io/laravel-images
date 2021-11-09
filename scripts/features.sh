@@ -119,7 +119,7 @@ function laraboot::setup-starterkit() {
   sid=$(docker run -d $appName --entrypoint willfail)
   docker cp $sid:/workspace $layer
   # not interested in the vendor folder
-  rm -rf $layer/vendor
+  rm -rf $layer/workspace/vendor
   laraboot::merge $layer/workspace $LARAVEL_DIR_APP
 }
 
