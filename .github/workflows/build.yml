@@ -8,7 +8,7 @@ on:
       - feature/**
 
 jobs:
-  build:
+  base:
     runs-on: ubuntu-latest
     # Service container Mysql mysql
     services:
@@ -138,9 +138,35 @@ jobs:
         with:
           name: version
           path: /tmp/version.txt
+  features:
+    needs:
+      - base
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        operating-system: [ ubuntu-latest ]
+        flavor: [ '--full', '--with-breeze','--with-jetstream' ]
+    steps:
+      - uses: buildpacks/github-actions/setup-pack@v4.4.2
+      - uses: GoogleCloudPlatform/release-please-action@v2
+      - name: Download base artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: app
+      - name: Download app meta
+        uses: actions/download-artifact@v2
+        with:
+          name: version
+      - id: flavor
+        run: |
+          #!/usr/bin/env bash
+          set -euo pipefail
+          VERSION="$(cat version.txt)"
+          chmod +x ./scripts/features.sh
+          ./scripts/features.sh ${{ matrix.flavor }}
   publish:
     needs:
-      - build
+      - features
     runs-on: ubuntu-latest
     steps:
       - uses: buildpacks/github-actions/setup-pack@v4.4.2

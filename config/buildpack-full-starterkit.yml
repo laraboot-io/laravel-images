@@ -1,0 +1,11 @@
+# buildpack-full-starterkit.yml
+laravel-starterkit:
+  # Jetstream configuration
+  jetstream:
+    enabled: true
+    teams: true
+    stack: livewire
+  # Breeze configuration
+  breeze:
+    enabled: true
+    stack: inertia

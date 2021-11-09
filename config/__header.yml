@@ -1,0 +1,11 @@
+php:
+  version: "{{ .phpVersion }}"
+  webserver: php-server
+  webdirectory: public
+  libdirectory: lib
+  script: index.php
+  serveradmin: admin@localhost
+  redis:
+    session_store_service_name: redis-sessions
+  memcached:
+    session_store_service_name: memcached-sessions
