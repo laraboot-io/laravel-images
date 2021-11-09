@@ -145,7 +145,7 @@ jobs:
     strategy:
       matrix:
         operating-system: [ ubuntu-latest ]
-        flavor: [ '--full', '--with-breeze','--with-jetstream' ]
+        flavor: [ 'full', 'with-breeze','with-jetstream' ]
     steps:
       - uses: buildpacks/github-actions/setup-pack@v4.4.2
       - uses: actions/checkout@v2
@@ -165,10 +165,13 @@ jobs:
         run: |
           #!/usr/bin/env bash
           set -euo pipefail
-          VERSION="$(cat version.txt)"
+          dirname=${{ matrix.flavor }}
+          mkdir -p $dirname
+          cwd=$(pwd)
+          tar -zxf app.tar.gz -C $dirname
           sudo chmod 666 /var/run/docker.sock
           chmod +x ./scripts/features.sh
-          ./scripts/features.sh ${{ matrix.flavor }}
+          LARAVEL_DIR_APP="${cwd}/${dirname}" ./scripts/features.sh "--${{ matrix.flavor }}"
   publish:
     needs:
       - features

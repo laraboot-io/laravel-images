@@ -121,7 +121,7 @@ function laraboot::build(){
 function laraboot::merge(){
   source=$1
   dest=$2
-  echo " $source -> $dest"
+  echo "merge $source -> $dest"
 }
 
 main "${@:-}"
