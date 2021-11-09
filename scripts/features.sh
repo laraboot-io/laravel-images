@@ -61,7 +61,7 @@ function main() {
     esac
   done
 
-#  laraboot::install
+  laraboot::install
 
   tmpdir=$(mktemp -d)
 
