@@ -203,9 +203,9 @@ jobs:
         run: |
           #!/usr/bin/env bash
           set -euo pipefail
+          shopt -s globstar
           VERSION="$(cat artifacts/version/version.txt)"
-          chmod +x ./scripts/checksums.sh
-          ./scripts/checksums.sh
+          md5sum **/*.tar.gz > checksums.md5
           curl -s https://api.github.com/repos/laravel/framework/releases/tags/$VERSION > notes.md
           echo "::set-output name=version::$VERSION"
       - uses: buildpacks/github-actions/setup-pack@v4.4.2
