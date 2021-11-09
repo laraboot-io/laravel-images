@@ -230,6 +230,7 @@ jobs:
           artifacts: "artifacts/**/*.tar.gz,checksums.*"
           removeArtifacts: true
           token: ${{ secrets.RELEASE_TOKEN }}
+      - uses: actions/checkout@v2
       - run: |
           readonly releaseid="${{ steps.xrelease.outputs.id }}"
           readonly releaselink="${{ steps.xrelease.outputs.html_url }}"
@@ -243,7 +244,7 @@ jobs:
           author_email: no-reply@laraboot.io
           message: 'Release-As: ${{ steps.dist.outputs.version }}'
           push: false
-          add: '*.json'
+          add: 'registry.json'
       - uses: GoogleCloudPlatform/release-please-action@v2
         id: release
         with:
