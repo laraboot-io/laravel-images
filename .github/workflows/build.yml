@@ -220,7 +220,7 @@ jobs:
           tag_name: ${{ steps.dist.outputs.version }}
           repo: laraboot-io/laravel-images
         env:
-          GITHUB_TOKEN: ${{ secrets.ORG_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PUBLIC_REPO_TOKEN }}
       - uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
