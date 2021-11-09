@@ -226,4 +226,4 @@ jobs:
           allowUpdates: true
           tag: ${{ steps.dist.outputs.version }}
           artifacts: "artifacts/*.tar.gz,artifacts/**/*.tar.gz"
-          token: ${{ secrets.ORG_TOKEN }}
+          token: ${{ secrets.RELEASE_TOKEN }}
