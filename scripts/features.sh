@@ -31,13 +31,17 @@ function main() {
     --with-breeze | -wb)
       shift 1
         withBreeze=1
-        # laraboot task add @core/laravel-starterkit-buildpack --format=file -vvv
       ;;
 
     --with-jetstream | -wj)
       shift 1
         withJetstream=1
-        # laraboot task add @core/laravel-starterkit-buildpack --format=file -vvv
+      ;;
+
+    --full)
+      shift 1
+        withBreeze=1
+        withJetstream=1
       ;;
 
     --help | -h)
