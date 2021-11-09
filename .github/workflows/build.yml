@@ -4,8 +4,8 @@ on:
     - cron: "0 * * * *"
   push:
     branches:
-      - dev
-      - feature/**
+      - main
+      - master
 
 jobs:
   base:
