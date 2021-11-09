@@ -106,8 +106,8 @@ function laraboot::setup-starterkit() {
   laraboot new app
   cd app
   laraboot task add @core/laravel-starterkit-buildpack --format=file
-  cp $buildpackFile buildpack.yml
-  laraboot build
+  cat $buildpackFile >> buildpack.yml
+  laraboot build -vvv
   docker images
 }
 
