@@ -1,19 +1,16 @@
 # Laravel images
 
-This project bootstrap _Laravel_ projects with its variants inside a convenient _Docker_ image.
+This project precooks a Laravel application and its different features in a convenient versioned way, so you can always get the latest version of the framework dependencies included.
 
-## Build
-docker build . --file Dockerfile -t script-builder
+## Variants
 
-## Usage
+On each release you'll find several tar files. Here's what's on each one of those.
 
-### Grab distro from image
 
-#### Default setup
-
-docker cp script-builder:/usr/app/dist/default.zip .
-
-#### Breeze setup
-docker cp script-builder:/usr/app/dist/breeze.zip .
-
+|  Feature  |    Description     |    Dist file     |
+|-----------|--------------------|------------------|
+| Full      | Breeze & Jetstream | full.tar.gz      |
+| Jetstream | Jetstream-only     | with-jetstream.tar.gz |
+| Breeze    | Breeze-only        | with-breeze.tar.gz    |
+| Minimal   | Standard setup     | app.tar.gz       |
 
