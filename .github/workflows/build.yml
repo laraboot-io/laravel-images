@@ -181,15 +181,15 @@ jobs:
           ./scripts/features.sh "--${{ matrix.flavor }}"
 
           pushd ${cwd}/${dirname}
-          tar -czf /tmp/app-${{ matrix.flavor }}.tar.gz .
+          tar -czf /tmp/${{ matrix.flavor }}.tar.gz .
           popd
 
           ls /tmp/app-${{ matrix.flavor }}.tar.gz
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ matrix.flavor }}-app
-          path: /tmp/app-${{ matrix.flavor }}.tar.gz
+          name: ${{ matrix.flavor }}
+          path: /tmp/${{ matrix.flavor }}.tar.gz
   publish:
     needs:
       - features
@@ -203,7 +203,7 @@ jobs:
         run: |
           #!/usr/bin/env bash
           set -euo pipefail
-          VERSION="$(cat artifacts/version)"
+          VERSION="$(cat artifacts/version/version.txt)"
           echo "::set-output name=version::$VERSION"
       - uses: buildpacks/github-actions/setup-pack@v4.4.2
       - uses: GoogleCloudPlatform/release-please-action@v2
@@ -225,5 +225,5 @@ jobs:
         with:
           allowUpdates: true
           tag: ${{ steps.dist.outputs.version }}
-          artifacts: "artifacts/*.tar.gz"
+          artifacts: "artifacts/*.tar.gz,artifacts/**/*.tar.gz"
           token: ${{ secrets.ORG_TOKEN }}
