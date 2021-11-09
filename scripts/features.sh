@@ -67,7 +67,6 @@ function main() {
 
   laraboot::setup-starterkit $withBreeze $withJetstream $ftdir
   # in the form of `from directory` `into directory`
-  laraboot::merge $ftdir/app $LARAVEL_DIR_APP
 
 }
 
@@ -88,28 +87,34 @@ function laraboot::setup-starterkit() {
   withBreeze=$1
   withJetstream=$2
   cwd=$3
+  appName="app"
 
   if [[ "$withBreeze" -eq "1" && "$withJetstream" -eq "1" ]]; then
     util::print::title "Setup with breeze & jetstream 🧙"
     buildpackFile="${ROOTDIR}/config/buildpack-full-starterkit.yml"
+    appName="full"
   else
     if [[ "$withBreeze" -eq "1" ]]; then
         util::print::title "Setup with breeze only 🧙"
         buildpackFile="${ROOTDIR}/config/buildpack-breeze-only.yml"
+        appName="breeze"
       else
-        util::print::title "Setup with breeze only 🧙"
+        util::print::title "Setup with jetstream only 🧙"
         buildpackFile="${ROOTDIR}/config/buildpack-jetstream-only.yml"
+        appName="jetstream"
       fi
   fi
 
   cd $cwd
-  laraboot new app --php-version=8.0.*
+  laraboot new $appName --php-version=8.0.*
   cd app
   laraboot task add @core/laravel-starterkit-buildpack --format=file
   laraboot task add nodejs --imageUri=gcr.io/paketo-buildpacks/nodejs --format=external --prepend -vvv
   cat $buildpackFile >> buildpack.yml
   laraboot build -vvv
-  docker images
+  docker images $appName
+
+  laraboot::merge $cwd/$appName $LARAVEL_DIR_APP
 }
 
 function laraboot::install() {
@@ -126,6 +131,7 @@ function laraboot::merge(){
   echo "merge $source -> $dest"
   ls $source
   ls $dest
+  rsync -a $source/ $dest
 }
 
 main "${@:-}"
