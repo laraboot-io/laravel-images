@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - dev
       - master
 
 jobs:
@@ -166,6 +167,7 @@ jobs:
         with:
           name: version
       - id: flavor
+        continue-on-error: true
         run: |
           #!/usr/bin/env bash
           set -euo pipefail
