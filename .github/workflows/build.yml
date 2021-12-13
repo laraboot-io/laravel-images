@@ -1,5 +1,6 @@
 name: Artifact Laravel application
 on:
+  workflow_dispatch:
   schedule:
     - cron: "0 * * * *"
   push:
@@ -185,6 +186,9 @@ jobs:
           popd
 
           ls /tmp/${{ matrix.flavor }}.tar.gz
+      - name: Check on failures
+        if: (${{ success() }} || ${{ failure() }}) && (${{ steps.flavor.outcome }} == 'failure')
+        run: exit 1
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
