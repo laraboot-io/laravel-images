@@ -111,7 +111,7 @@ function laraboot::setup-starterkit() {
   laraboot task add @core/laravel-starterkit-buildpack --format=file
   laraboot task add nodejs --imageUri=gcr.io/paketo-buildpacks/nodejs --format=external --prepend -vvv
   cat $buildpackFile >>buildpack.yml
-  laraboot build --env NODE_ENV=dev -vvv
+  laraboot build --env NODE_ENV=dev --pack-params "env NODE_ENV=dev" -vvv
   docker images $appName
 
   ls -ltah
@@ -128,7 +128,7 @@ function laraboot::install() {
 }
 
 function laraboot::build() {
-  laraboot build -vvv
+  laraboot build --env NODE_ENV=dev --pack-params "env NODE_ENV=dev" -vvv
 }
 
 function laraboot::merge() {
