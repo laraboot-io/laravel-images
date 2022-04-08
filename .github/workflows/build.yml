@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - main
+      - dev
       - master
 
 jobs:
@@ -33,7 +34,7 @@ jobs:
     strategy:
       matrix:
         operating-system: [ ubuntu-latest ]
-        php-versions: [ '8.0' ]
+        php-versions: [ '8.0','8.1' ]
         dependency-stability: [ 'prefer-stable' ]
 
     name: P${{ matrix.php-versions }} - L${{ matrix.laravel }} - ${{ matrix.dependency-stability }} - ${{ matrix.operating-system}}
@@ -146,7 +147,7 @@ jobs:
     strategy:
       matrix:
         operating-system: [ ubuntu-latest ]
-        flavor: [ 'full', 'with-breeze','with-jetstream' ]
+        flavor: [ 'simple', 'with-breeze','with-jetstream' ]
     steps:
       - uses: buildpacks/github-actions/setup-pack@v4.4.2
       - uses: actions/checkout@v2
@@ -167,6 +168,7 @@ jobs:
         with:
           name: version
       - id: flavor
+        continue-on-error: true
         run: |
           #!/usr/bin/env bash
           set -euo pipefail
