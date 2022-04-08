@@ -198,6 +198,11 @@ jobs:
       - features
     runs-on: ubuntu-latest
     steps:
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE }}
+          aws-region: ${{ secrets.AWS_REGION }}
       - name: Download artifacts
         uses: actions/download-artifact@v2
         with:
@@ -214,6 +219,10 @@ jobs:
           touch release.md
           echo "### 🧙 ${VERSION} " >> release.md
           echo "::set-output name=version::$VERSION"
+      # Upload a file to AWS s3
+      - name:  Copy dist to S3
+        run: |
+          aws s3 cp *.tar.gz s3://${{ secrets.AWS_S3_BUCKET }}/
       - uses: buildpacks/github-actions/setup-pack@v4.4.2
       - uses: dev-drprasad/delete-tag-and-release@v0.2.0
         with:
