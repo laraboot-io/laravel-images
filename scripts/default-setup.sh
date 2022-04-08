@@ -13,7 +13,6 @@ composer_cmd() {
 
 cd /usr/app
 
-
 echo "🧙 Default was selected. Creating an empty laravel application first."
 
 mkdir -p default && cp -r /usr/app/mount/laravel-app/* default

@@ -20,8 +20,8 @@ fi
 cd inertia
 
 /usr/app/scripts/require.sh && composer require inertiajs/inertia-laravel &&
-composer_cmd dump-autoload -o --apcu &&
-npm install
+  composer_cmd dump-autoload -o --apcu &&
+  npm install
 
 zip -qr inertia.zip . &&
   mv inertia.zip /usr/app/dist

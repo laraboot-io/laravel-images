@@ -22,12 +22,12 @@ cp -r /usr/app/mount/laravel-app/* breeze
 cd breeze
 
 /usr/app/scripts/require.sh &&
-composer_cmd update &&
-composer require laravel/breeze --dev &&
-php artisan breeze:install &&
-composer_cmd dump-autoload -o --apcu &&
-npm install &&
-npm run dev
+  composer_cmd update &&
+  composer require laravel/breeze --dev &&
+  php artisan breeze:install &&
+  composer_cmd dump-autoload -o --apcu &&
+  npm install &&
+  npm run dev
 
 zip -qr breeze.zip . &&
   mv breeze.zip /usr/app/dist
