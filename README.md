@@ -7,10 +7,10 @@ This project precooks a Laravel application and its different features in a conv
 On each release you'll find several tar files. Here's what's on each one of those.
 
 
-|  Feature  |    Description     |    Dist file     |
-|-----------|--------------------|------------------|
-| Full      | Breeze & Jetstream | full.tar.gz      |
-| Jetstream | Jetstream-only     | with-jetstream.tar.gz |
-| Breeze    | Breeze-only        | with-breeze.tar.gz    |
-| Minimal   | Standard setup     | app.tar.gz       |
+| Feature   | Description  |    Dist file     |
+|-----------|--------------|------------------|
+| Simple    | Just Laravel | simple.tar.gz      |
+| Jetstream | Jetstream-only | with-jetstream.tar.gz |
+| Breeze    | Breeze-only  | with-breeze.tar.gz    |
+| Minimal   | Standard setup | app.tar.gz       |
 

@@ -146,7 +146,7 @@ jobs:
     strategy:
       matrix:
         operating-system: [ ubuntu-latest ]
-        flavor: [ 'full', 'with-breeze','with-jetstream' ]
+        flavor: [ 'simple', 'with-breeze','with-jetstream' ]
     steps:
       - uses: buildpacks/github-actions/setup-pack@v4.4.2
       - uses: actions/checkout@v2

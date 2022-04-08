@@ -38,10 +38,8 @@ function main() {
         withJetstream=1
       ;;
 
-    --full)
+    --simple)
       shift 1
-        withBreeze=1
-        withJetstream=1
       ;;
 
     --help | -h)
