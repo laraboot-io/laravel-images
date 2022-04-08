@@ -30,12 +30,12 @@ function main() {
 
     --with-breeze | -wb)
       shift 1
-        withBreeze=1
+      withBreeze=1
       ;;
 
     --with-jetstream | -wj)
       shift 1
-        withJetstream=1
+      withJetstream=1
       ;;
 
     --simple)
@@ -93,14 +93,14 @@ function laraboot::setup-starterkit() {
     appName="full"
   else
     if [[ "$withBreeze" -eq "1" ]]; then
-        util::print::title "Setup with breeze only 🧙"
-        buildpackFile="${ROOTDIR}/config/buildpack-breeze-only.yml"
-        appName="breeze"
-      else
-        util::print::title "Setup with jetstream only 🧙"
-        buildpackFile="${ROOTDIR}/config/buildpack-jetstream-only.yml"
-        appName="jetstream"
-      fi
+      util::print::title "Setup with breeze only 🧙"
+      buildpackFile="${ROOTDIR}/config/buildpack-breeze-only.yml"
+      appName="breeze"
+    else
+      util::print::title "Setup with jetstream only 🧙"
+      buildpackFile="${ROOTDIR}/config/buildpack-jetstream-only.yml"
+      appName="jetstream"
+    fi
   fi
 
   cd $cwd
@@ -108,8 +108,8 @@ function laraboot::setup-starterkit() {
   cd $appName
   laraboot task add @core/laravel-starterkit-buildpack --format=file
   laraboot task add nodejs --imageUri=gcr.io/paketo-buildpacks/nodejs --format=external --prepend -vvv
-  cat $buildpackFile >> buildpack.yml
-  laraboot build -vvv
+  cat $buildpackFile >>buildpack.yml
+  laraboot build --env NODE_ENV=dev --pack-params "env NODE_ENV=dev" -vvv
   docker images $appName
 
   ls -ltah
@@ -125,11 +125,11 @@ function laraboot::install() {
   npm i -g @laraboot-io/cli
 }
 
-function laraboot::build(){
-  laraboot build -vvv
+function laraboot::build() {
+  laraboot build --env NODE_ENV=dev --pack-params "env NODE_ENV=dev" -vvv
 }
 
-function laraboot::merge(){
+function laraboot::merge() {
   source=$1
   dest=$2
   echo "merge $source -> $dest"
