@@ -225,7 +225,9 @@ jobs:
       # Upload a file to AWS s3
       - name:  Copy dist to S3
         run: |
-          aws s3 cp *.tar.gz s3://${{ secrets.AWS_S3_BUCKET }}/
+          ls -ltah
+          ls -ltah artifacts
+          aws s3 cp artifacts/*.tar.gz s3://${{ secrets.AWS_S3_BUCKET }}/
       - uses: buildpacks/github-actions/setup-pack@v4.4.2
       - uses: dev-drprasad/delete-tag-and-release@v0.2.0
         with:
