@@ -194,6 +194,9 @@ jobs:
           name: ${{ matrix.flavor }}
           path: /tmp/${{ matrix.flavor }}.tar.gz
   publish:
+    permissions:
+      id-token: write
+      contents: read    # This is required for actions/checkout
     needs:
       - features
     runs-on: ubuntu-latest
