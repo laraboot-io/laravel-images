@@ -227,7 +227,7 @@ jobs:
         run: |
           ls -ltah
           ls -ltah artifacts
-          aws s3 cp artifacts/*.tar.gz s3://${{ secrets.AWS_S3_BUCKET }}/
+          aws s3 cp artifacts s3://${{ secrets.AWS_S3_BUCKET }}/artifacts --recursive
       - uses: buildpacks/github-actions/setup-pack@v4.4.2
       - uses: dev-drprasad/delete-tag-and-release@v0.2.0
         with:
