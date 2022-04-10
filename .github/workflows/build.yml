@@ -194,10 +194,18 @@ jobs:
           name: ${{ matrix.flavor }}
           path: /tmp/${{ matrix.flavor }}.tar.gz
   publish:
+    permissions:
+      id-token: write
+      contents: read    # This is required for actions/checkout
     needs:
       - features
     runs-on: ubuntu-latest
     steps:
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE }}
+          aws-region: ${{ secrets.AWS_REGION }}
       - name: Download artifacts
         uses: actions/download-artifact@v2
         with:
@@ -214,6 +222,13 @@ jobs:
           touch release.md
           echo "### 🧙 ${VERSION} " >> release.md
           echo "::set-output name=version::$VERSION"
+      # Upload a file to AWS s3
+      - name:  Copy dist to S3
+        run: |
+          VERSION="$(cat artifacts/version/version.txt)"
+          aws s3 cp artifacts s3://${{ secrets.AWS_S3_BUCKET }}/artifacts/laravel/${VERSION} --recursive
+          aws s3 cp artifacts/app/app.tar.gz s3://${{ secrets.AWS_S3_BUCKET }}/artifacts/laravel/${VERSION}/app.tar.gz
+          aws s3 cp artifacts/simple/simple.tar.gz s3://${{ secrets.AWS_S3_BUCKET }}/artifacts/laravel/${VERSION}/app-simple.tar.gz
       - uses: buildpacks/github-actions/setup-pack@v4.4.2
       - uses: dev-drprasad/delete-tag-and-release@v0.2.0
         with:
