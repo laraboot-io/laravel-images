@@ -94,6 +94,7 @@ function laraboot::setup-starterkit() {
   else
     if [[ "$withBreeze" -eq "0" && "$withJetstream" -eq "0" ]]; then
       appName="simple"
+      buildpackFile="${ROOTDIR}/config/buildpack-simple.yml"
     else
       if [[ "$withBreeze" -eq "1" ]]; then
         util::print::title "Setup with breeze only 🧙"
