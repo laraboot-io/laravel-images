@@ -225,11 +225,10 @@ jobs:
       # Upload a file to AWS s3
       - name:  Copy dist to S3
         run: |
-          ls -ltah
-          ls -ltah artifacts
-          aws s3 cp artifacts s3://${{ secrets.AWS_S3_BUCKET }}/artifacts/$VERSION --recursive
-          aws s3 cp artifacts/app/app.tar.gz s3://${{ secrets.AWS_S3_BUCKET }}/artifacts/$VERSION/${VERSION}.tar.gz
-          aws s3 cp artifacts/simple/simple.tar.gz s3://${{ secrets.AWS_S3_BUCKET }}/artifacts/$VERSION/${VERSION}-simple.tar.gz
+          VERSION="$(cat artifacts/version/version.txt)"
+          aws s3 cp artifacts s3://${{ secrets.AWS_S3_BUCKET }}/artifacts/${VERSION} --recursive
+          aws s3 cp artifacts/app/app.tar.gz s3://${{ secrets.AWS_S3_BUCKET }}/artifacts/${VERSION}/${VERSION}.tar.gz
+          aws s3 cp artifacts/simple/simple.tar.gz s3://${{ secrets.AWS_S3_BUCKET }}/artifacts/${VERSION}/${VERSION}-simple.tar.gz
       - uses: buildpacks/github-actions/setup-pack@v4.4.2
       - uses: dev-drprasad/delete-tag-and-release@v0.2.0
         with:
