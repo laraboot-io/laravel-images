@@ -226,9 +226,9 @@ jobs:
       - name:  Copy dist to S3
         run: |
           VERSION="$(cat artifacts/version/version.txt)"
-          aws s3 cp artifacts s3://${{ secrets.AWS_S3_BUCKET }}/artifacts/${VERSION} --recursive
-          aws s3 cp artifacts/app/app.tar.gz s3://${{ secrets.AWS_S3_BUCKET }}/artifacts/${VERSION}/${VERSION}.tar.gz
-          aws s3 cp artifacts/simple/simple.tar.gz s3://${{ secrets.AWS_S3_BUCKET }}/artifacts/${VERSION}/${VERSION}-simple.tar.gz
+          aws s3 cp artifacts s3://${{ secrets.AWS_S3_BUCKET }}/artifacts/laravel/${VERSION} --recursive
+          aws s3 cp artifacts/app/app.tar.gz s3://${{ secrets.AWS_S3_BUCKET }}/artifacts/laravel/${VERSION}/app.tar.gz
+          aws s3 cp artifacts/simple/simple.tar.gz s3://${{ secrets.AWS_S3_BUCKET }}/artifacts/laravel/${VERSION}/app-simple.tar.gz
       - uses: buildpacks/github-actions/setup-pack@v4.4.2
       - uses: dev-drprasad/delete-tag-and-release@v0.2.0
         with:
