@@ -175,6 +175,7 @@ jobs:
           set -euo pipefail
           dirname=${{ matrix.flavor }}
           mkdir -p $dirname
+          mkdir -p /tmp/${{ matrix.flavor }}
           cwd=$(pwd)
           # Untar base app
           tar -zxf app.tar.gz -C $dirname
