@@ -5,6 +5,7 @@ on:
     - cron: "0 * * * *"
   push:
     branches:
+      - feature/*
       - main
       - dev
       - master
@@ -185,6 +186,7 @@ jobs:
 
           pushd ${cwd}/${dirname}
           tar -czf /tmp/${{ matrix.flavor }}.tar.gz .
+          zip -r /tmp/${{ matrix.flavor }}.zip .
           popd
 
           ls /tmp/${{ matrix.flavor }}.tar.gz
@@ -192,7 +194,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.flavor }}
-          path: /tmp/${{ matrix.flavor }}.tar.gz
+          path: /tmp/${{ matrix.flavor }}/**/*
   publish:
     permissions:
       id-token: write
@@ -215,6 +217,7 @@ jobs:
           #!/usr/bin/env bash
           set -euo pipefail
           shopt -s globstar
+          ls -ltah artifacts
           VERSION="$(cat artifacts/version/version.txt)"
           find . -name *.tar.gz -type f -print0 | xargs -0 md5sum > checksums.md5
           find . -name *.tar.gz -type f -print0 | xargs -0 sha256sum > checksums.sha256
