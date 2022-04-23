@@ -185,8 +185,8 @@ jobs:
           ./scripts/features.sh "--${{ matrix.flavor }}"
 
           pushd ${cwd}/${dirname}
-          tar -czf /tmp/${{ matrix.flavor }}.tar.gz .
-          zip -r /tmp/${{ matrix.flavor }}.zip .
+          tar -czf /tmp/${{ matrix.flavor }}/${{ matrix.flavor }}.tar.gz .
+          zip -r /tmp/${{ matrix.flavor }}/${{ matrix.flavor }}.zip .
           popd
 
           ls /tmp/${{ matrix.flavor }}.tar.gz
