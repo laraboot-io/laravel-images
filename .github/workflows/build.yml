@@ -1,4 +1,4 @@
-name: Artifact Laravel application
+name: Builder
 on:
   workflow_dispatch:
   schedule:
