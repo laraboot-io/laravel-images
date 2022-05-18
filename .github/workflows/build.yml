@@ -192,7 +192,6 @@ jobs:
           zip -r /tmp/${{ matrix.flavor }}/${{ matrix.flavor }}.zip .
           popd
 
-          ls /tmp/${{ matrix.flavor }}.tar.gz
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
