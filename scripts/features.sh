@@ -232,7 +232,12 @@ function laraboot::install() {
 }
 
 function laraboot::build(){
-  laraboot build -vvv
+  docker ps -a --format '{{.Image}} {{.Names}}'
+  # remove existing builder if any (before)
+  [ "$(docker ps -a --format '{{.Image}} {{.Names}}' | grep builder)" ] && docker rm -f $(docker ps -aq --filter name=builder)
+  laraboot build -vvv --cc
+  # remove existing builder if any (after)
+  [ "$(docker ps -a --format '{{.Image}} {{.Names}}' | grep builder)" ] && docker rm -f $(docker ps -aq --filter name=builder)
 }
 
 function laraboot::merge(){
