@@ -244,12 +244,30 @@ jobs:
       - uses: ncipollo/release-action@v1
         id: xrelease
         with:
-          allowUpdates: true
+          allowUpdates: false
           # Pending. I need to check the status code in case the release hasn't been published in Github repository yet
           #          bodyFile: notes.md
           bodyFile: release.md
           tag: ${{ steps.dist.outputs.version }}
-          artifacts: "artifacts/**/*.tar.gz,checksums.*"
+          artifacts: "artifacts/**/*.tar.gz,artifacts/**/*.zip,checksums.*"
+          removeArtifacts: true
+          token: ${{ secrets.RELEASE_TOKEN }}
+      - uses: dev-drprasad/delete-tag-and-release@v0.2.0
+        with:
+          delete_release: true # default: false
+          tag_name: latest
+          repo: laraboot-io/laravel-images
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+      - uses: ncipollo/release-action@v1
+        id: latestrelease
+        with:
+          allowUpdates: true
+          # Pending. I need to check the status code in case the release hasn't been published in Github repository yet
+          #          bodyFile: notes.md
+          bodyFile: release.md
+          tag: latest
+          artifacts: "artifacts/**/*.tar.gz,artifacts/**/*.zip,checksums.*"
           removeArtifacts: true
           token: ${{ secrets.RELEASE_TOKEN }}
       - uses: actions/checkout@v2
