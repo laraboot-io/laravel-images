@@ -185,9 +185,13 @@ jobs:
           chmod +x ./scripts/features.sh
           export LARAVEL_DIR_APP="${cwd}/${dirname}"
 
-          # remove existing builder if any
+          # remove existing builder if any (before)
           [ "$(docker ps -a | grep builder)" ] && docker rm -f $(docker ps -aq --filter name=builder)
+          
           ./scripts/features.sh "--${{ matrix.flavor }}"
+          
+          # remove existing builder if any (after)
+          [ "$(docker ps -a | grep builder)" ] && docker rm -f $(docker ps -aq --filter name=builder)
 
           pushd ${cwd}/${dirname}
           tar -czf /tmp/${{ matrix.flavor }}/${{ matrix.flavor }}.tar.gz .
