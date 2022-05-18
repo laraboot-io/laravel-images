@@ -237,8 +237,7 @@ function laraboot::build(){
   [ "$(docker ps -a --format '{{.Image}} {{.Names}}' | grep builder)" ] && docker rm -f $(docker ps -aq --filter name=builder)
   util::print::title "Building"
   laraboot build -vvv --cc
-  # remove existing builder if any (after)
-  [ "$(docker ps -a --format '{{.Image}} {{.Names}}' | grep builder)" ] && docker rm -f $(docker ps -aq --filter name=builder)
+  util::print::title "Build finished"
 }
 
 function laraboot::merge(){
