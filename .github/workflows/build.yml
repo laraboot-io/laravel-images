@@ -198,6 +198,12 @@ jobs:
           zip -r /tmp/${{ matrix.flavor }}/${{ matrix.flavor }}.zip .
           popd
 
+      - name: Adding markdown
+        run: |
+          echo '### ${{ matrix.flavor }} :rocket:' >> $GITHUB_STEP_SUMMARY
+          md5sum ${{ matrix.flavor }}.tar.gz >> $GITHUB_STEP_SUMMARY
+          md5sum ${{ matrix.flavor }}.zip >> $GITHUB_STEP_SUMMARY
+
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
