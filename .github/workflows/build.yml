@@ -201,8 +201,11 @@ jobs:
       - name: Adding markdown
         run: |
           echo '### ${{ matrix.flavor }} :rocket:' >> $GITHUB_STEP_SUMMARY
-          md5sum /tmp/${{ matrix.flavor }}/${{ matrix.flavor }}.tar.gz >> $GITHUB_STEP_SUMMARY
-          md5sum /tmp/${{ matrix.flavor }}/${{ matrix.flavor }}.zip >> $GITHUB_STEP_SUMMARY
+          echo '**Checksums**' >> $GITHUB_STEP_SUMMARY
+          pushd /tmp/${{ matrix.flavor }}
+          md5sum ${{ matrix.flavor }}.tar.gz >> $GITHUB_STEP_SUMMARY
+          md5sum ${{ matrix.flavor }}.zip >> $GITHUB_STEP_SUMMARY
+          popd
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
