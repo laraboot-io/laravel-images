@@ -87,15 +87,23 @@ function laraboot::setup-starterkit() {
   cwd=$3
   appName="app"
 
+  cd $cwd || exit
+  laraboot new $appName --php-version=8.0.* -vvv
+  cd $appName || exit
+  
   if [[ "$withBreeze" -eq "1" && "$withJetstream" -eq "1" ]]; then
     util::print::title "Setup with breeze & jetstream 🧙"
     buildpackFile="${ROOTDIR}/config/buildpack-full-starterkit.yml"
     appName="full"
+    laraboot task add nodejs --imageUri=gcr.io/paketo-buildpacks/nodejs --format=external --prepend -vvv
+    laraboot task add @core/laravel-starterkit-buildpack --format=file
   else
     if [[ "$withBreeze" -eq "0" && "$withJetstream" -eq "0" ]]; then
       appName="simple"
       buildpackFile="${ROOTDIR}/config/buildpack-simple.yml"
     else
+      laraboot task add nodejs --imageUri=gcr.io/paketo-buildpacks/nodejs --format=external --prepend -vvv
+      laraboot task add @core/laravel-starterkit-buildpack --format=file
       if [[ "$withBreeze" -eq "1" ]]; then
         util::print::title "Setup with breeze only 🧙"
         buildpackFile="${ROOTDIR}/config/buildpack-breeze-only.yml"
@@ -107,13 +115,105 @@ function laraboot::setup-starterkit() {
       fi
     fi
   fi
-
-  cd $cwd || exit
-  laraboot new $appName --php-version=8.0.* -vvv
-  cd $appName || exit
-  laraboot task add @core/laravel-starterkit-buildpack --format=file
-  laraboot task add nodejs --imageUri=gcr.io/paketo-buildpacks/nodejs --format=external --prepend -vvv
+  
   cat $buildpackFile >> buildpack.yml
+  touch project.toml
+  cat << EOF > project.toml
+[build]
+[[build.env]]
+name = 'BP_COMPOSER_INSTALL_GLOBAL'
+value = 'oscarnevarezleal/laravel-sed'
+[[build.env]]
+name = 'BP_ENABLE_GIT'
+value = 'true'
+[[build.env]]
+name = 'BP_ENABLE_GIT_COMMIT'
+value = 'true'
+[[build.env]]
+name = 'BP_LARAVEL_MODEL_CLEANUP'
+value = 'true'
+[[build.env]]
+name = 'BP_LARAVEL_MODEL_PROVIDER'
+value = 'blueprint'
+[[build.env]]
+name = 'BP_COMPOSER_INSTALL_OPTIONS'
+value = '--no-scripts'
+[[build.env]]
+name = 'BP_PHP_WEB_DIR'
+value = 'public'
+[[build.env]]
+name = 'BP_LOG_LEVEL'
+value = 'INFO'
+EOF
+
+  mkdir -p .php.ini.d
+  touch .php.ini.d/laraboot.ini
+  cat << EOF > .php.ini.d/laraboot.ini
+extension=openssl.so
+extension=pdo.so
+extension=curl.so
+extension=pdo_mysql.so
+extension=pdo_sqlite.so
+extension=mbstring.so
+extension=fileinfo.so
+EOF
+
+cat << EOF > laraboot.json
+{
+   "name": "${appName}",
+   "description": "A laraboot project",
+   "version": "0.0.1",
+   "project_id": "0.0.1",
+   "php": {
+      "version": "8.0.*"
+   },
+   "Framework": {
+      "config": {
+         "overrides": []
+      },
+      "custom": {
+         "config": {}
+      },
+      "models": [
+         {
+            "name": "Record",
+            "columns": [
+               {
+                  "name": "log",
+                  "type": "string"
+               }
+            ]
+         },
+         {
+            "name": "Thing",
+            "columns": [
+               {
+                  "name": "log",
+                  "type": "string"
+               }
+            ]
+         }
+      ]
+   },
+   "Build": {
+      "tasks": [
+         {
+            "name": "paketo-buildpacks/php",
+            "uri": "paketo-buildpacks/php",
+            "local": false,
+            "format": "external"
+         },
+         {
+            "name": "paketo-buildpacks/composer",
+            "uri": "paketo-buildpacks/composer",
+            "local": false,
+            "format": "external"
+         }
+      ]
+   }
+}
+EOF
+
   laraboot build -vvv --cc
   docker images $appName
 
