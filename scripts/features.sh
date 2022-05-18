@@ -214,7 +214,7 @@ cat << EOF > laraboot.json
 }
 EOF
 
-  laraboot build -vvv --cc
+  laraboot::build
   docker images $appName
 
   ls -ltah
@@ -235,6 +235,7 @@ function laraboot::build(){
   docker ps -a --format '{{.Image}} {{.Names}}'
   # remove existing builder if any (before)
   [ "$(docker ps -a --format '{{.Image}} {{.Names}}' | grep builder)" ] && docker rm -f $(docker ps -aq --filter name=builder)
+  util::print::title "Building"
   laraboot build -vvv --cc
   # remove existing builder if any (after)
   [ "$(docker ps -a --format '{{.Image}} {{.Names}}' | grep builder)" ] && docker rm -f $(docker ps -aq --filter name=builder)
