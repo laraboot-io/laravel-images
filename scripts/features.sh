@@ -128,6 +128,7 @@ function laraboot::setup-starterkit() {
 
 function laraboot::install() {
   npm i -g @laraboot-io/cli
+  laraboot --version
 }
 
 function laraboot::build(){
