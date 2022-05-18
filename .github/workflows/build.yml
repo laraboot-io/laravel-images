@@ -175,6 +175,8 @@ jobs:
         run: |
           #!/usr/bin/env bash
           set -euo pipefail
+          # Having a fresh start
+          docker system prune --all -f
           dirname=${{ matrix.flavor }}
           mkdir -p $dirname
           mkdir -p /tmp/${{ matrix.flavor }}

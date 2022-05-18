@@ -227,7 +227,11 @@ EOF
 }
 
 function laraboot::install() {
-  npm i -g @laraboot-io/cli
+  if ! command -v laraboot &> /dev/null
+  then
+      echo "<laraboot> could not be found; installing"
+      npm i -g @laraboot-io/cli
+  fi
   laraboot --version
 }
 
