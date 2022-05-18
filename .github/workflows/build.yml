@@ -146,6 +146,7 @@ jobs:
       - base
     runs-on: ubuntu-latest
     strategy:
+      max-parallel: 1
       matrix:
         operating-system: [ ubuntu-latest ]
         flavor: [ 'simple', 'with-breeze','with-jetstream' ]
