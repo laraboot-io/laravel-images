@@ -186,7 +186,7 @@ jobs:
           export LARAVEL_DIR_APP="${cwd}/${dirname}"
 
           # remove existing builder if any
-          docker rm $(docker ps -aq --filter name=builder)
+          [ "$(docker ps -a | grep builder)" ] && docker rm -f $(docker ps -aq --filter name=builder)
           ./scripts/features.sh "--${{ matrix.flavor }}"
 
           pushd ${cwd}/${dirname}
