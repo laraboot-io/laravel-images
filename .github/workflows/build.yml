@@ -168,11 +168,12 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: version
-      - id: flavor
+      - name: Build custom
+        id: flavor
         continue-on-error: true
         run: |
           #!/usr/bin/env bash
-          set -euo pipefail
+          # set -euo pipefail
           dirname=${{ matrix.flavor }}
           mkdir -p $dirname
           mkdir -p /tmp/${{ matrix.flavor }}
