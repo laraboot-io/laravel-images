@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-set -eu
-set -o pipefail
+#set -eu
+#set -o pipefail
 
 readonly PROGDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly ROOTDIR="$(cd "${PROGDIR}/.." && pwd)"
@@ -108,13 +108,13 @@ function laraboot::setup-starterkit() {
     fi
   fi
 
-  cd $cwd
-  laraboot new $appName --php-version=8.0.*
-  cd $appName
+  cd $cwd || exit
+  laraboot new $appName --php-version=8.0.* -vvv
+  cd $appName || exit
   laraboot task add @core/laravel-starterkit-buildpack --format=file
   laraboot task add nodejs --imageUri=gcr.io/paketo-buildpacks/nodejs --format=external --prepend -vvv
   cat $buildpackFile >> buildpack.yml
-  laraboot build -vvv
+  laraboot build -vvv --cc
   docker images $appName
 
   ls -ltah
