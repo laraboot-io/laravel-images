@@ -9,6 +9,12 @@ jobs:
     name: GenerateReleasesContent
     runs-on: ubuntu-latest
     steps:
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: '0.91.2'
+          extended: true
+      - uses: actions/checkout@v2
       - name: Create content
         run : |
           mkdir docs
