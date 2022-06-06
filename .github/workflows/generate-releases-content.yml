@@ -11,4 +11,5 @@ jobs:
     steps:
       - id: release
         run: |
+          echo 1
           wget https://api.github.com/repos/laravel/framework/tags | jq .
