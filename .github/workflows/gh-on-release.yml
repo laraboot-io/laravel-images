@@ -23,7 +23,7 @@ jobs:
             mkdir themes
             mkdir -p content/posts
             pushd themes
-              git clone https://github.com/ronv/listed
+              git clone https://github.com/ronv/minimalist.git
               rm -rf listed/content/*
             popd
             
@@ -38,7 +38,7 @@ jobs:
             echo "" >> $file
             echo "${{ github.sha }}" >> $file
   
-            hugo -D -b https://laraboot-io.github.io/laravel-images/ -t listed
+            hugo -D -b https://laraboot-io.github.io/laravel-images/ -t minimalist
           popd
 
       - name: Publish content
