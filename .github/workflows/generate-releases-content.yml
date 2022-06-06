@@ -17,4 +17,6 @@ jobs:
                echo ${row} | base64 --decode | jq -r ${1}
               }
              echo $(_jq '.name')
+             echo $(_jq '.zipball_url')
+             echo "----- \n"
           done
