@@ -18,8 +18,12 @@ jobs:
 
       - name: Create content
         run : |
+          mkdir themes
           mkdir -p content/posts
+          pushd themes
           git clone https://github.com/ronv/listed
+          popd
+          
           file="content/posts/${{ github.sha }}.md"
 
           touch $file
