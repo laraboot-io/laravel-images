@@ -35,7 +35,7 @@ jobs:
             popd
             
             mkdir -p content/writing
-            file="content/writing/${{ github.sha }}.md"
+            file="content/writing/${RELEASE_VERSION}.md"
   
             touch $file
             echo "---" > $file
@@ -53,7 +53,7 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v4
         id: auto-commit-action
         with:
-          commit_message: 'New content: ${{ github.sha }}'
+          commit_message: 'new tag: ${{ steps.get_version.outputs.VERSION }}'
           commit_options: '--allow-empty'
           repository: .
           status_options: '--untracked-files=no'
