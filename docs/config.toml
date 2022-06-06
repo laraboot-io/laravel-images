@@ -1,6 +1,6 @@
 baseURL = ""
 languageCode = "en-us"
-title = "Liste"
+title = "Images"
 disableKinds = ["section", "categories", "tags"]
 disqusShortname = ""
 pygmentsCodeFences = false
@@ -29,10 +29,10 @@ disable = true
 disable = true
 
 [Author]
-name = "Liste"
+name = "Laraboot.io"
 
 [params]
-description = "Minimalistic Hugo blogging theme"
+description = "Laraboot Laravel images"
 author = ""
 copyright = ""
 logo = ""
@@ -74,12 +74,6 @@ identifier = "index"
 name       = "Index"
 url        = "/"
 weight     = -111
-
-[[menu.main]]
-identifier = "projects"
-name       = "Projects"
-url        = "/projects/"
-weight     = -30
 
 [[menu.main]]
 identifier = "about"
