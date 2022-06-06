@@ -1,10 +1,9 @@
 name: gh-on-issue
 
 on:
-  release:
-    types:
-      - created
-      - published
+  push:
+    tags:
+      - '*'
 
 jobs:
   job1:
