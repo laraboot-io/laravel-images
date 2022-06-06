@@ -15,3 +15,6 @@ jobs:
           owner: laravel
           repo: framework
           excludes: prerelease, draft
+      - id: echo
+        run: |
+          echo ${{ steps.keydb.outputs.release }}
