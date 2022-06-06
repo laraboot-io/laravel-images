@@ -1,4 +1,0 @@
-laravel-starterkit:
-  breeze:
-    enabled: true
-    stack: inertia

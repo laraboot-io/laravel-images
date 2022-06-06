@@ -1,5 +1,0 @@
-laravel-starterkit:
-  jetstream:
-    enabled: true
-    teams: true
-    stack: livewire
