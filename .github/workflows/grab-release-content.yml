@@ -5,7 +5,7 @@ on:
       - feature/grab-release-content
 
 jobs:
-  build:
+  grab-release-content:
     name: ReadLatestLaravelRelease
     runs-on: ubuntu-latest
     steps:

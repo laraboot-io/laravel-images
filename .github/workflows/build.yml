@@ -59,11 +59,6 @@ jobs:
         run: |
           export PATH="/home/runner/.composer/vendor/bin:$HOME/.config/composer/vendor/bin:$HOME/.composer/vendor/bin:$PATH"
           laravel new app
-      #      - name: Install NPM packages
-      #        if: steps.node_modules-cache.outputs.cache-hit != 'true'
-      #        run: npm ci
-      #      - name: Build frontend
-      #        run: npm run development
       - name: Install PHP versions
         uses: shivammathur/setup-php@v2
         with:

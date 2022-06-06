@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  generate-releases-content:
     name: GenerateReleasesContent
     runs-on: ubuntu-latest
     steps:
