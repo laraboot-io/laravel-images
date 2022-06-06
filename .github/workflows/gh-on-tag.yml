@@ -16,6 +16,9 @@ jobs:
           extended: true
 
       - uses: actions/checkout@v2
+        with:
+          ref: releases
+          fetch-depth: 0 # To get all tags
 
       - name: Get the version
         id: get_version
