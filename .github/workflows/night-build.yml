@@ -170,9 +170,9 @@ jobs:
           set -euo pipefail
           # Having a fresh start
           docker system prune --all -f
-          dirname=${{ matrix.flavor }}
+          dirname=simple
           mkdir -p $dirname
-          mkdir -p /tmp/${{ matrix.flavor }}
+          mkdir -p /tmp/simple
           cwd=$(pwd)
           # Untar base app
           tar -zxf app.tar.gz -C $dirname
@@ -180,8 +180,8 @@ jobs:
           chmod +x ./scripts/features.sh
           LARAVEL_DIR_APP="${cwd}/${dirname}" ./scripts/features.sh --simple
           pushd ${cwd}/${dirname}
-          tar -czf /tmp/${{ matrix.flavor }}/${{ matrix.flavor }}.tar.gz .
-          zip -r /tmp/${{ matrix.flavor }}/${{ matrix.flavor }}.zip .
+          tar -czf /tmp/simple/simple.tar.gz .
+          zip -r /tmp/simple/simple.zip .
           popd
       - name: CR Release
         env:
