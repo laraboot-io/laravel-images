@@ -249,11 +249,6 @@ jobs:
           repo: laraboot-io/laravel-images
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-      - uses: dev-drprasad/delete-tag-and-release@v0.2.0
-        with:
-          delete_release: true # default: false
-          tag_name: ${{ steps.dist.outputs.version }}
-          repo: laraboot-io/laravel-images
       - uses: ncipollo/release-action@v1
         id: xrelease
         with:
