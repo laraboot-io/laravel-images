@@ -48,7 +48,7 @@ jobs:
           commit_options: '--allow-empty'
           repository: .
           status_options: '--untracked-files=no'
-          file_pattern: 'content/**/*'
+          file_pattern: 'docs/content/**/*'
           push_options: '--force'
           skip_dirty_check: true
           skip_fetch: true
@@ -59,4 +59,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: ./docs/public
+          publish_dir: ./docs
