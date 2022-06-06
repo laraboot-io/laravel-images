@@ -27,8 +27,8 @@ jobs:
               rm -rf minimalist/content/*
             popd
             
-            mkdir -p content/posts
-            file="content/posts/${{ github.sha }}.md"
+            mkdir -p content/writing
+            file="content/writing/${{ github.sha }}.md"
   
             touch $file
             echo "---" > $file
