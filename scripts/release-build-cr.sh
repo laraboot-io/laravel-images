@@ -3,10 +3,6 @@
 set -eu
 set -o pipefail
 
-readonly PROGDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-# shellcheck disable=SC2034
-# readonly ROOT_DIR="$(cd "${PROGDIR}/.." && pwd)"
-
 function main() {
   while [[ "${#}" != 0 ]]; do
     case "${1}" in
