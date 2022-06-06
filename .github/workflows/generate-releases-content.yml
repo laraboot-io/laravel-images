@@ -1,0 +1,14 @@
+name: grab-release-content
+on:
+  push:
+    branches:
+      - feature/grab-release-content
+
+jobs:
+  build:
+    name: GenerateReleasesContent
+    runs-on: ubuntu-latest
+    steps:
+      - id: release
+        run: |
+          wget https://api.github.com/repos/laravel/framework/tags | jq .
