@@ -1,54 +1,88 @@
-baseurl = "/"
+baseURL = ""
 languageCode = "en-us"
-theme = "hello-friend"
-paginate = 5
+title = "Liste"
+disableKinds = ["section", "categories", "tags"]
+disqusShortname = ""
+pygmentsCodeFences = false
+pygmentsUseClasses = false
+paginate = 9999
+minify = true
+disableHugoGeneratorInject = true
+
+
+[taxonomies]
+tag = "tags"
+category = "categories"
+
+[privacy]
+[privacy.disqus]
+disable = true
+[privacy.googleAnalytics]
+disable = true
+[privacy.instagram]
+disable = true
+[privacy.twitter]
+disable = true
+[privacy.vimeo]
+disable = true
+[privacy.youtube]
+disable = true
+
+[Author]
+name = "Liste"
 
 [params]
-  # dir name of your blog content (default is `content/posts`).
-  # the list of set content will show up on your index page (baseurl).
-  contentTypeName = "posts"
+description = "Minimalistic Hugo blogging theme"
+author = ""
+copyright = ""
+logo = ""
 
-  # "light" or "dark"
-  defaultTheme = "dark"
+[frontmatter]
+date  = [":filename", ":default"]
+author = ""
+github = ""
+facebook = ""
+og_image = ""
+sitename = "Liste"
+twitter = ""
 
-  # if you set this to 0, only submenu trigger will be visible
-  showMenuItems = 2
+[permalinks]
+posts = "/:year/:month/:day/:filename"
+pages = "/:slug"
+photos = "/:year/:month/:day/:filename"
 
-  # Show reading time in minutes for posts
-  showReadingTime = false
+[outputs]
+home = ["HTML", "RSS", "JSON"]
+section = ["HTML"]
 
-  # Show table of contents at the top of your posts (defaults to false)
-  # Alternatively, add this param to post front matter for specific posts
-  # toc = true
+[outputFormats.RSS]
+mediatype = "application/rss"
+baseName = "atom"
 
-  # Show full page content in RSS feed items
-  #(default is Description or Summary metadata in the front matter)
-  # rssFullText = true
+[outputFormats.JSON]
+mediatype = "application/json"
+baseName = "feed"
 
-[languages]
-  [languages.en]
-    title = "Laravel images"
-    subtitle = "for the go"
-    keywords = ""
-    copyright = ""
-    menuMore = "Show more"
-    writtenBy = "Written by"
-    readMore = "Read more"
-    readOtherPosts = "Read other posts"
-    newerPosts = "Newer posts"
-    olderPosts = "Older posts"
-    minuteReadingTime = "min read"
-    dateFormatSingle = "2006-01-02"
-    dateFormatList = "2006-01-02"
-    # leave empty to disable, enter display text to enable
-    # lastModDisplay = ""
+[sitemap]
+changefreq = "monthly"
+filename = "sitemap.xml"
+priority = 0.5
 
-    [languages.en.params.logo]
-      logoText = "hello friend"
-      logoHomeLink = "/"
+[menu]
+[[menu.main]]
+identifier = "index"
+name       = "Index"
+url        = "/"
+weight     = -111
 
-    [languages.en.menu]
-      [[languages.en.menu.main]]
-        identifier = "about"
-        name = "About"
-        url = "/about"
+[[menu.main]]
+identifier = "projects"
+name       = "Projects"
+url        = "/projects/"
+weight     = -30
+
+[[menu.main]]
+identifier = "about"
+name       = "About"
+url        = "/about/"
+weight     = -20
