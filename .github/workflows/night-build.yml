@@ -134,6 +134,8 @@ jobs:
           name: version
           path: /tmp/version.txt
   release-base:
+    needs:
+      - build-base
     runs-on: ubuntu-latest
     steps:
       - name: Docker login
