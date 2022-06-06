@@ -51,7 +51,6 @@ jobs:
           skip_dirty_check: true
           skip_fetch: true
           disable_globbing: true
-          branch: gh-pages
 
       - name: Update Gh-pages
         uses: peaceiris/actions-gh-pages@v3
