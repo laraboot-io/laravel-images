@@ -1,4 +1,4 @@
-name: gh-on-issue
+name: gh-on-tag
 
 on:
   push:
@@ -62,6 +62,7 @@ jobs:
           skip_dirty_check: true
           skip_fetch: true
           disable_globbing: true
+          branch: releases
 
       - name: Update Gh-pages
         uses: peaceiris/actions-gh-pages@v3
