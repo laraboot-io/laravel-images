@@ -24,6 +24,7 @@ jobs:
             mkdir -p content/posts
             pushd themes
               git clone https://github.com/ronv/listed
+              rm -rf listed/content/*
             popd
             
             file="content/posts/${{ github.sha }}.md"
