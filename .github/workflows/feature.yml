@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    name: RedisTimeSeries
+    name: ReadLatestLaravelRelease
     runs-on: ubuntu-latest
     steps:
       - id: keydb
@@ -17,4 +17,7 @@ jobs:
           excludes: prerelease, draft
       - id: echo
         run: |
+          # https://api.github.com/repos/laravel/framework/tags
           echo ${{ steps.keydb.outputs.release }}
+          # zipball_url: 
+          # https://api.github.com/repos/laravel/framework/zipball/refs/tags/${{ steps.keydb.outputs.release }}
