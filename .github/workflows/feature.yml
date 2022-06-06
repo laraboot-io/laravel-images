@@ -1,0 +1,17 @@
+name: grab-release-content
+on:
+  push:
+    branches:
+      - feature/grab-release-content
+
+jobs:
+  build:
+    name: RedisTimeSeries
+    runs-on: ubuntu-latest
+    steps:
+      - id: keydb
+        uses: pozetroninc/github-action-get-latest-release@master
+        with:
+          owner: laravel
+          repo: framework
+          excludes: prerelease, draft
