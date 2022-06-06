@@ -184,7 +184,7 @@ jobs:
           LOCAL_IMAGE: simple
           IMAGE_TAG: latest
           RELEASE: ${{ fromJSON('["no", "yes"]')[github.ref != 'refs/heads/main'] }}
-          ECR_REGISTRY: docker.io/laraboot
+          ECR_REGISTRY: docker.io
         run: |
           chmod +x ./scripts/release-build-cr.sh
           ./scripts/release-build-cr.sh
