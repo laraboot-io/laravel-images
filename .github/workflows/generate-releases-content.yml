@@ -11,6 +11,7 @@ jobs:
     steps:
       - name: Create content
         run : |
+          mkdir docs
           pushd docs
             mkdir themes
           
