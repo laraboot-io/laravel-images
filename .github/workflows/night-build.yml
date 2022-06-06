@@ -144,6 +144,45 @@ jobs:
           registry: docker.io
           username: ${{ secrets.DOCKER_HUB_USER }}
           password: ${{ secrets.DOCKER_HUB_PASS }}
+      - uses: actions/checkout@v2
+      - uses: buildpacks/github-actions/setup-pack@v4.4.2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '15.x'
+      - name: Install PHP versions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+      - name: Download base artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: app
+      - name: Download app meta
+        uses: actions/download-artifact@v2
+        with:
+          name: version
+      - name: Build custom
+        id: flavor
+        continue-on-error: false
+        run: |
+          #!/usr/bin/env bash
+          set -euo pipefail
+          # Having a fresh start
+          docker system prune --all -f
+          dirname=${{ matrix.flavor }}
+          mkdir -p $dirname
+          mkdir -p /tmp/${{ matrix.flavor }}
+          cwd=$(pwd)
+          # Untar base app
+          tar -zxf app.tar.gz -C $dirname
+          sudo chmod 666 /var/run/docker.sock
+          chmod +x ./scripts/features.sh
+          LARAVEL_DIR_APP="${cwd}/${dirname}" ./scripts/features.sh --simple
+          pushd ${cwd}/${dirname}
+          tar -czf /tmp/${{ matrix.flavor }}/${{ matrix.flavor }}.tar.gz .
+          zip -r /tmp/${{ matrix.flavor }}/${{ matrix.flavor }}.zip .
+          popd
       - name: CR Release
         env:
           IMAGE_TAG: latest
