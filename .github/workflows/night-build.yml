@@ -179,12 +179,9 @@ jobs:
           sudo chmod 666 /var/run/docker.sock
           chmod +x ./scripts/features.sh
           LARAVEL_DIR_APP="${cwd}/${dirname}" ./scripts/features.sh --simple
-          pushd ${cwd}/${dirname}
-          tar -czf /tmp/simple/simple.tar.gz .
-          zip -r /tmp/simple/simple.zip .
-          popd
       - name: CR Release
         env:
+          LOCAL_IMAGE: simple
           IMAGE_TAG: latest
           RELEASE: ${{ fromJSON('["no", "yes"]')[github.ref != 'refs/heads/main'] }}
           ECR_REGISTRY: docker.io/laraboot

@@ -45,13 +45,12 @@ function cmd::build() {
 
   : ${IMAGE_TAG:=dev}
 
-  readonly name="base"
-  readonly repository="laraboot/${name}"
+  readonly repository="laraboot/laravel"
 
   echo "  ----> Id: $repository"
   echo "  ----> Tag: $ECR_REGISTRY/$repository:$IMAGE_TAG"
 
-  docker tag $name $ECR_REGISTRY/$repository:$IMAGE_TAG
+  docker tag $LOCAL_IMAGE $ECR_REGISTRY/$repository:$IMAGE_TAG
   docker push $ECR_REGISTRY/$repository:"$IMAGE_TAG"
 }
 
