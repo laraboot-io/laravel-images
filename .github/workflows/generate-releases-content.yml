@@ -1,0 +1,73 @@
+name: generate-releases-content
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: GenerateReleasesContent
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: '0.91.2'
+          extended: true
+      - uses: actions/checkout@v2
+        with:
+          ref: releases
+          fetch-depth: 0 # To get all tags
+      - name: Create content
+        run : |
+          mkdir docs
+          pushd docs
+            mkdir themes
+          
+            pushd themes
+              git clone https://github.com/laraboot-io/images-theme.git
+              rm -rf images-theme/content/*
+            popd
+          
+            mkdir -p content/writing
+          
+            tags=$(curl https://api.github.com/repos/laravel/framework/tags | jq -rc '.')
+            for row in $(echo "${tags}" | jq -r '.[] | @base64'); do
+                _jq() {
+                 echo ${row} | base64 --decode | jq -r ${1}
+                }
+               tag=$(_jq '.name')
+               url=$(_jq '.zipball_url')
+               echo "-----"
+                file="content/writing/${tag}.md"
+                touch $file
+                echo "---" > $file
+                echo "title: \"${tag}\"" >> $file
+                echo "date: 2021-11-14T22:40:38Z" >> $file
+                echo "draft: false" >> $file
+                echo "---" >> $file
+                echo "" >> $file
+                echo "${url}" >> $file
+            done
+          
+            hugo -D -b https://laraboot-io.github.io/laravel-images/ -t images-theme
+          popd
+
+      - name: Publish content
+        uses: stefanzweifel/git-auto-commit-action@v4
+        id: auto-commit-action
+        with:
+          commit_message: 'New content: ${{ github.sha }}'
+          commit_options: '--allow-empty'
+          repository: .
+          status_options: '--untracked-files=no'
+          file_pattern: 'docs/content/**/*'
+          push_options: '--force'
+          skip_dirty_check: true
+          skip_fetch: true
+          disable_globbing: true
+
+      - name: Update Gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./docs/public
