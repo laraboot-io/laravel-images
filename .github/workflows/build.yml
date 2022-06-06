@@ -5,7 +5,10 @@ on:
     - cron: "0 * * * *"
   push:
     branches:
-      - feature/grab-release-content
+      - feature/*
+      - main
+      - dev
+      - master
 
 jobs:
   base:
