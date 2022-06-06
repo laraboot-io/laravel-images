@@ -19,24 +19,26 @@ jobs:
 
       - name: Create content
         run : |
-          mkdir themes
-          mkdir -p content/posts
-          pushd themes
-          git clone https://github.com/ronv/listed
+          pushd docs
+            mkdir themes
+            mkdir -p content/posts
+            pushd themes
+              git clone https://github.com/ronv/listed
+            popd
+            
+            file="content/posts/${{ github.sha }}.md"
+  
+            touch $file
+            echo "---" > $file
+            echo "title: \"${{ github.sha }}\"" >> $file
+            echo "date: 2021-11-14T22:40:38Z" >> $file
+            echo "draft: false" >> $file
+            echo "---" >> $file
+            echo "" >> $file
+            echo "${{ github.sha }}" >> $file
+  
+            hugo -D -b https://laraboot-io.github.io/laravel-images/ -t listed
           popd
-          
-          file="content/posts/${{ github.sha }}.md"
-
-          touch $file
-          echo "---" > $file
-          echo "title: \"${{ github.sha }}\"" >> $file
-          echo "date: 2021-11-14T22:40:38Z" >> $file
-          echo "draft: false" >> $file
-          echo "---" >> $file
-          echo "" >> $file
-          echo "${{ github.sha }}" >> $file
-
-          hugo -D -b https://laraboot-io.github.io/laravel-images/ -t listed
 
       - name: Publish content
         uses: stefanzweifel/git-auto-commit-action@v4
@@ -57,4 +59,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: ./public
+          publish_dir: ./docs/public
