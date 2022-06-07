@@ -142,7 +142,6 @@ EOF
   laraboot::build
   docker images $appName
 
-  ls -ltah
   layer=$(mktemp -d)
   sid=$(docker run -d $appName --entrypoint willfail)
   docker cp $sid:/workspace $layer
