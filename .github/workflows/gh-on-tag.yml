@@ -236,7 +236,7 @@ jobs:
           
             echo "---" > $file
             echo "title: \"${RELEASE_VERSION}\"" >> $file
-            echo "date: $today >> $file
+            echo "date: $today" >> $file
             echo "draft: false" >> $file
             echo "---" >> $file
             echo "" >> $file
