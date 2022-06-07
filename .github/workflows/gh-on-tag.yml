@@ -217,6 +217,7 @@ jobs:
       - name: Create content
         env:
           RELEASE_VERSION: ${{ steps.get_version.outputs.VERSION }}
+          CR_IMAGE_URI: ${{ steps.crimage.outputs.uri }}
         run : |
           pushd docs
             mkdir themes
@@ -231,6 +232,8 @@ jobs:
             today=$(date +"%Y-%m-%dT%H:%M:%S%z")
   
             touch $file
+            echo "Generate: $file"
+          
             echo "---" > $file
             echo "title: \"${RELEASE_VERSION}\"" >> $file
             echo "date: $today >> $file
@@ -238,7 +241,7 @@ jobs:
             echo "---" >> $file
             echo "" >> $file
             echo "Tag: ${RELEASE_VERSION}" >> $file
-            echo "Image: ${{ steps.crimage.outputs.uri }}" >> $file
+            echo "Image: ${CR_IMAGE_URI}" >> $file
   
             hugo -D -b https://laraboot-io.github.io/laravel-images/ -t images-theme
           popd
