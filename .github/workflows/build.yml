@@ -166,8 +166,7 @@ jobs:
           name: version
       - id: getversion
         run: |
-          ls -ltah
-          VERSION="$(cat version/version.txt)"
+          VERSION="$(cat version.txt)"
           echo "::set-output name=version::$VERSION"
       - name: Build custom
         id: flavor
