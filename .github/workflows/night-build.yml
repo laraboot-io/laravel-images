@@ -1,17 +1,15 @@
-name: Builder
+name: night-build
 on:
   workflow_dispatch:
   schedule:
     - cron: "0 * * * *"
   push:
     branches:
-      - feature/*
-      - main
-      - dev
       - master
+      - main
 
 jobs:
-  base:
+  build-base:
     runs-on: ubuntu-latest
     # Service container Mysql mysql
     services:
@@ -136,18 +134,19 @@ jobs:
         with:
           name: version
           path: /tmp/version.txt
-  features:
+  release-base:
     needs:
-      - base
+      - build-base
     runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 1
-      matrix:
-        operating-system: [ ubuntu-latest ]
-        flavor: [ 'simple', 'with-breeze','with-jetstream' ]
     steps:
-      - uses: buildpacks/github-actions/setup-pack@v4.4.2
+      - name: Docker login
+        uses: docker/login-action@v1
+        with:
+          registry: docker.io
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_PASS }}
       - uses: actions/checkout@v2
+      - uses: buildpacks/github-actions/setup-pack@v4.4.2
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
@@ -164,10 +163,6 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: version
-      - id: getversion
-        run: |
-          VERSION="$(cat version.txt)"
-          echo "::set-output name=version::$VERSION"
       - name: Build custom
         id: flavor
         continue-on-error: false
@@ -176,135 +171,21 @@ jobs:
           set -euo pipefail
           # Having a fresh start
           docker system prune --all -f
-          dirname=${{ matrix.flavor }}
+          dirname=simple
           mkdir -p $dirname
-          mkdir -p /tmp/${{ matrix.flavor }}
+          mkdir -p /tmp/simple
           cwd=$(pwd)
           # Untar base app
           tar -zxf app.tar.gz -C $dirname
           sudo chmod 666 /var/run/docker.sock
           chmod +x ./scripts/features.sh
-          LARAVEL_DIR_APP="${cwd}/${dirname}" ./scripts/features.sh "--${{ matrix.flavor }}"
-
-          pushd ${cwd}/${dirname}
-          tar -czf /tmp/${{ matrix.flavor }}/${{ matrix.flavor }}.tar.gz .
-          zip -r /tmp/${{ matrix.flavor }}/${{ matrix.flavor }}.zip .
-          popd
-
-      - name: Docker login
-        uses: docker/login-action@v1
-        if: matrix.flavor == 'simple'
-        with:
-          registry: docker.io
-          username: ${{ secrets.DOCKER_HUB_USER }}
-          password: ${{ secrets.DOCKER_HUB_PASS }}
-
+          LARAVEL_DIR_APP="${cwd}/${dirname}" ./scripts/features.sh --simple
       - name: CR Release
-        if: matrix.flavor == 'simple'
         env:
-          LOCAL_IMAGE: ${{ matrix.flavor }}
-          IMAGE_TAG: ${{ steps.getversion.version }}
+          LOCAL_IMAGE: simple
+          IMAGE_TAG: latest
           RELEASE: ${{ fromJSON('["no", "yes"]')[github.ref != 'refs/heads/main'] }}
           ECR_REGISTRY: docker.io
         run: |
           chmod +x ./scripts/release-build-cr.sh
           ./scripts/release-build-cr.sh
-
-      - name: Adding markdown
-        run: |
-          echo '### ${{ matrix.flavor }} :rocket:' >> $GITHUB_STEP_SUMMARY
-          echo '**Checksums**' >> $GITHUB_STEP_SUMMARY
-          pushd /tmp/${{ matrix.flavor }}
-          md5sum ${{ matrix.flavor }}.tar.gz >> $GITHUB_STEP_SUMMARY
-          md5sum ${{ matrix.flavor }}.zip >> $GITHUB_STEP_SUMMARY
-          popd
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: ${{ matrix.flavor }}
-          path: /tmp/${{ matrix.flavor }}/**/*
-  publish:
-    permissions:
-      id-token: write
-      contents: read    # This is required for actions/checkout
-    needs:
-      - features
-    runs-on: ubuntu-latest
-    steps:
-      - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          role-to-assume: ${{ secrets.AWS_OIDC_ROLE }}
-          aws-region: ${{ secrets.AWS_REGION }}
-      - name: Download artifacts
-        uses: actions/download-artifact@v2
-        with:
-          path: artifacts
-      - id: dist
-        run: |
-          #!/usr/bin/env bash
-          set -euo pipefail
-          shopt -s globstar
-          ls -ltah artifacts
-          VERSION="$(cat artifacts/version/version.txt)"
-          find . -name *.zip -type f -print0 | xargs -0 md5sum > checksums.md5
-          find . -name *.tar.gz -type f -print0 | xargs -0 md5sum > checksums.md5
-          find . -name *.tar.gz -type f -print0 | xargs -0 sha256sum > checksums.sha256
-          curl -s https://api.github.com/repos/laravel/framework/releases/tags/$VERSION > notes.md
-          touch release.md
-          echo "### 🧙 ${VERSION} " >> release.md
-          echo "::set-output name=version::$VERSION"
-      # Upload a file to AWS s3
-      - name:  Copy dist to S3
-        run: |
-          VERSION="$(cat artifacts/version/version.txt)"
-          ls -ltah artifacts
-          ls -ltah artifacts/app
-          aws s3 cp artifacts s3://${{ secrets.AWS_S3_BUCKET }}/artifacts/laravel/${VERSION} --recursive
-          aws s3 cp artifacts/app/app.tar.gz s3://${{ secrets.AWS_S3_BUCKET }}/artifacts/laravel/${VERSION}/app.tar.gz
-          aws s3 cp artifacts/simple/simple.tar.gz s3://${{ secrets.AWS_S3_BUCKET }}/artifacts/laravel/${VERSION}/app-simple.tar.gz
-      - uses: buildpacks/github-actions/setup-pack@v4.4.2
-      - uses: dev-drprasad/delete-tag-and-release@v0.2.0
-        with:
-          delete_release: true # default: false
-          tag_name: ${{ steps.dist.outputs.version }}
-          repo: laraboot-io/laravel-images
-        env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-      - uses: ncipollo/release-action@v1
-        id: xrelease
-        with:
-          allowUpdates: false
-          # Pending. I need to check the status code in case the release hasn't been published in Github repository yet
-          #          bodyFile: notes.md
-          bodyFile: release.md
-          tag: ${{ steps.dist.outputs.version }}
-          artifacts: "artifacts/**/*.tar.gz,artifacts/**/*.zip,checksums.*"
-          removeArtifacts: true
-          token: ${{ secrets.RELEASE_TOKEN }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-      - uses: actions/checkout@v2
-      - run: |
-          readonly releaseid="${{ steps.xrelease.outputs.id }}"
-          readonly releaselink="${{ steps.xrelease.outputs.html_url }}"
-          jq '.releases[.releases| length] |= . + {"name": "${{ steps.dist.outputs.version }}", "link": "$releaselink"}' registry.json > registry-mod.json
-          mv registry-mod.json registry.json
-          cat registry.json
-      - name: Commit changes
-        uses: EndBug/add-and-commit@v7
-        with:
-          author_name: LarabootBot
-          author_email: no-reply@laraboot.io
-          message: 'minor(release): Release-As ${{ steps.dist.outputs.version }}'
-          push: false
-          add: 'registry.json'
-      - uses: GoogleCloudPlatform/release-please-action@v2
-        id: release
-        with:
-          token: ${{ secrets.RELEASE_TOKEN }}
-          release-type: simple
-          command: release-pr
-          package-name: "laravel-images"
-          bump-minor-pre-major: false

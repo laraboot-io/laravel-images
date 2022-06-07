@@ -1,0 +1,75 @@
+name: gh-on-tag
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: '0.91.2'
+          extended: true
+
+      - uses: actions/checkout@v2
+        with:
+          ref: releases
+          fetch-depth: 0 # To get all tags
+
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+        shell: bash
+
+      - name: Create content
+        env:
+          RELEASE_VERSION: ${{ steps.get_version.outputs.VERSION }}
+        run : |
+          pushd docs
+            mkdir themes
+            
+            pushd themes
+              git clone https://github.com/laraboot-io/images-theme.git
+              rm -rf images-theme/content/*
+            popd
+            
+            mkdir -p content/writing
+            file="content/writing/${RELEASE_VERSION}.md"
+  
+            touch $file
+            echo "---" > $file
+            echo "title: \"${RELEASE_VERSION}\"" >> $file
+            echo "date: 2021-11-14T22:40:38Z" >> $file
+            echo "draft: false" >> $file
+            echo "---" >> $file
+            echo "" >> $file
+            echo "${RELEASE_VERSION}" >> $file
+  
+            hugo -D -b https://laraboot-io.github.io/laravel-images/ -t images-theme
+          popd
+
+      - name: Publish content
+        uses: stefanzweifel/git-auto-commit-action@v4
+        id: auto-commit-action
+        with:
+          commit_message: 'new tag: ${{ steps.get_version.outputs.VERSION }}'
+          commit_options: '--allow-empty'
+          repository: .
+          status_options: '--untracked-files=no'
+          file_pattern: 'docs/content/**/*'
+          push_options: '--force'
+          skip_dirty_check: true
+          skip_fetch: true
+          disable_globbing: true
+          branch: releases
+
+      - name: Update Gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./docs/public
