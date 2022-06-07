@@ -115,6 +115,22 @@ jobs:
           DB_USER: rootf
 
         run: vendor/bin/phpunit --testdox
+      - name: Package
+        working-directory: ./app
+        id: build
+        run: |
+          composer show -f json laravel/framework | jq -r ".versions[0]" > /tmp/version.txt
+          tar -czf /tmp/app.tar.gz .
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: app
+          path: /tmp/app.tar.gz
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: version
+          path: /tmp/version.txt
   job1:
     needs:
       - initial
