@@ -193,11 +193,12 @@ jobs:
       - name: CR Release
         env:
           LOCAL_IMAGE: simple
+          REPOSITORY: laraboot/laravel
           IMAGE_TAG: ${{ steps.get_version.outputs.VERSION }}
           ECR_REGISTRY: docker.io
         run: |
-          chmod +x ./scripts/release-build-cr.sh
-          ./scripts/release-build-cr.sh
+          docker tag $LOCAL_IMAGE $ECR_REGISTRY/${REPOSITORY}:$IMAGE_TAG
+          docker push $ECR_REGISTRY/${REPOSITORY}:"$IMAGE_TAG"
 
       - name: Create content
         env:
