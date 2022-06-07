@@ -193,7 +193,7 @@ jobs:
       - name: CR Release
         env:
           LOCAL_IMAGE: simple
-          IMAGE_TAG: latest
+          IMAGE_TAG: ${{ steps.get_version.outputs.VERSION }}
           ECR_REGISTRY: docker.io
         run: |
           chmod +x ./scripts/release-build-cr.sh
