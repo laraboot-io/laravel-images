@@ -203,7 +203,7 @@ jobs:
         if: matrix.flavor == 'simple'
         env:
           LOCAL_IMAGE: ${{ matrix.flavor }}
-          IMAGE_TAG: ${{ steps.dist.getversion.version }}
+          IMAGE_TAG: ${{ steps.getversion.version }}
           RELEASE: ${{ fromJSON('["no", "yes"]')[github.ref != 'refs/heads/main'] }}
           ECR_REGISTRY: docker.io
         run: |
