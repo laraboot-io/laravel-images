@@ -228,11 +228,12 @@ jobs:
             
             mkdir -p content/writing
             file="content/writing/${RELEASE_VERSION}.md"
+            today=$(date +"%Y-%m-%dT%H:%M:%S%z")
   
             touch $file
             echo "---" > $file
             echo "title: \"${RELEASE_VERSION}\"" >> $file
-            echo "date: $(date +'%Y-%m-%d') >> $file
+            echo "date: $today >> $file
             echo "draft: false" >> $file
             echo "---" >> $file
             echo "" >> $file
