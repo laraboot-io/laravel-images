@@ -116,6 +116,8 @@ jobs:
 
         run: vendor/bin/phpunit --testdox
   job1:
+    needs:
+      - initial
     runs-on: ubuntu-latest
     steps:
       - uses: buildpacks/github-actions/setup-pack@v4.4.2
