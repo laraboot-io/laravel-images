@@ -230,7 +230,7 @@ function laraboot::install() {
   if ! command -v laraboot &> /dev/null
   then
       echo "<laraboot> could not be found; installing"
-      npm i -g @laraboot-io/cli
+      npm i -g @laraboot-io/cli@next
   fi
   laraboot --version
 }
