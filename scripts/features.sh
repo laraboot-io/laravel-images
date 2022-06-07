@@ -118,101 +118,26 @@ function laraboot::setup-starterkit() {
   
   cat $buildpackFile >> buildpack.yml
   touch project.toml
-  cat << EOF > project.toml
-[build]
-[[build.env]]
-name = 'BP_COMPOSER_INSTALL_GLOBAL'
-value = 'oscarnevarezleal/laravel-sed'
+  # Append model buildpack configuration
+cat << EOF >> project.toml
 [[build.env]]
 name = 'BP_ENABLE_GIT'
 value = 'true'
+
 [[build.env]]
 name = 'BP_ENABLE_GIT_COMMIT'
 value = 'true'
+
 [[build.env]]
 name = 'BP_LARAVEL_MODEL_CLEANUP'
 value = 'true'
+
 [[build.env]]
 name = 'BP_LARAVEL_MODEL_PROVIDER'
 value = 'blueprint'
-[[build.env]]
-name = 'BP_COMPOSER_INSTALL_OPTIONS'
-value = '--no-scripts'
-[[build.env]]
-name = 'BP_PHP_WEB_DIR'
-value = 'public'
-[[build.env]]
-name = 'BP_LOG_LEVEL'
-value = 'INFO'
 EOF
 
-  mkdir -p .php.ini.d
-  touch .php.ini.d/laraboot.ini
-  cat << EOF > .php.ini.d/laraboot.ini
-extension=openssl.so
-extension=pdo.so
-extension=curl.so
-extension=pdo_mysql.so
-extension=pdo_sqlite.so
-extension=mbstring.so
-extension=fileinfo.so
-EOF
-
-cat << EOF > laraboot.json
-{
-   "name": "${appName}",
-   "description": "A laraboot project",
-   "version": "0.0.1",
-   "project_id": "0.0.1",
-   "php": {
-      "version": "8.0.*"
-   },
-   "Framework": {
-      "config": {
-         "overrides": []
-      },
-      "custom": {
-         "config": {}
-      },
-      "models": [
-         {
-            "name": "Record",
-            "columns": [
-               {
-                  "name": "log",
-                  "type": "string"
-               }
-            ]
-         },
-         {
-            "name": "Thing",
-            "columns": [
-               {
-                  "name": "log",
-                  "type": "string"
-               }
-            ]
-         }
-      ]
-   },
-   "Build": {
-      "tasks": [
-         {
-            "name": "paketo-buildpacks/php",
-            "uri": "paketo-buildpacks/php",
-            "local": false,
-            "format": "external"
-         },
-         {
-            "name": "paketo-buildpacks/composer",
-            "uri": "paketo-buildpacks/composer",
-            "local": false,
-            "format": "external"
-         }
-      ]
-   }
-}
-EOF
+  jq ".name = \"$appName\"" laraboot.json > .laraboot.json && mv .laraboot.json laraboot.json
 
   laraboot::build
   docker images $appName
@@ -232,7 +157,7 @@ function laraboot::install() {
       echo "<laraboot> could not be found; installing"
       npm i -g @laraboot-io/cli@next
   fi
-  laraboot --version
+  echo "Using laraboot-io/cli@$(laraboot --version)" 
 }
 
 function laraboot::build(){
