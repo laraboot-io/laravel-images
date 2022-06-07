@@ -203,6 +203,7 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_PASS }}
 
       - name: CR Release
+        id: crimage
         env:
           LOCAL_IMAGE: simple
           REPOSITORY: laraboot/laravel
@@ -211,6 +212,7 @@ jobs:
         run: |
           docker tag $LOCAL_IMAGE $ECR_REGISTRY/${REPOSITORY}:$IMAGE_TAG
           docker push $ECR_REGISTRY/${REPOSITORY}:"$IMAGE_TAG"
+          echo "::set-output name=uri::$ECR_REGISTRY/${REPOSITORY}:$IMAGE_TAG"
 
       - name: Create content
         env:
@@ -230,11 +232,12 @@ jobs:
             touch $file
             echo "---" > $file
             echo "title: \"${RELEASE_VERSION}\"" >> $file
-            echo "date: 2021-11-14T22:40:38Z" >> $file
+            echo "date: $(date +'%Y-%m-%d') >> $file
             echo "draft: false" >> $file
             echo "---" >> $file
             echo "" >> $file
-            echo "${RELEASE_VERSION}" >> $file
+            echo "Tag: ${RELEASE_VERSION}" >> $file
+            echo "Image: ${{ steps.crimage.outputs.uri }}" >> $file
   
             hugo -D -b https://laraboot-io.github.io/laravel-images/ -t images-theme
           popd
