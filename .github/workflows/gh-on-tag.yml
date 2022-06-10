@@ -3,7 +3,7 @@ name: gh-on-tag
 on:
   push:
     tags:
-      - 'cr-*'
+      - '*'
 
 jobs:
   initial:
