@@ -95,11 +95,11 @@ function cmd::build() {
 
   if test -z "$base" 
   then
-    crane append -f <(tar -f - --directory=$workspace -c usr/src/app) -t $repository:$debugTag
+    crane append -f <(tar -f - --directory=$workspace -c usr/src/app) -t $repository:$tag
   else
     printf " ----> Base: %s \n" $base
     # use -b flag to specify base e.g busybox
-    crane append -b $base -f <(tar -f - --directory=$workspace -c usr/src/app) -t $repository:$debugTag
+    crane append -b $base -f <(tar -f - --directory=$workspace -c usr/src/app) -t $repository:$tag
   fi
 
   # now flatten
