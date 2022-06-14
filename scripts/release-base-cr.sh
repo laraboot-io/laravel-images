@@ -87,7 +87,7 @@ function cmd::build() {
       base=$3
   fi
 
-  readonly repository="laraboot/laravel-app"
+  readonly repository="laraboot/laravel"
 
   util::print::title "Releasing OCI artifacts"
   printf " ----> Id: %s \n" $repository
@@ -103,7 +103,7 @@ function cmd::build() {
   fi
 
   # now flatten
-  crane flatten laraboot/laravel-app:$tag -v
+  crane flatten $repository:$tag
 }
 
 main "${@:-}"
