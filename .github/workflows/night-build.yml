@@ -149,7 +149,7 @@ jobs:
       - uses: imjasonh/setup-crane@v0.1
       - name: Crane auth login
         env:
-          ECR_REGISTRY: docker.io
+          CI_REGISTRY: docker.io
           CI_REGISTRY_USER: ${{ secrets.DOCKER_HUB_USER }}
           CI_REGISTRY_PASSWORD: ${{ secrets.DOCKER_HUB_PASS }}
         run: |
