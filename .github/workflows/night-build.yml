@@ -146,6 +146,8 @@ jobs:
           registry: docker.io
           username: ${{ secrets.DOCKER_HUB_USER }}
           password: ${{ secrets.DOCKER_HUB_PASS }}
+      - uses: actions/checkout@v2
+      - uses: buildpacks/github-actions/setup-pack@v4.4.2
       - uses: imjasonh/setup-crane@v0.1
       - name: Crane auth login
         env:
@@ -154,8 +156,6 @@ jobs:
           CI_REGISTRY_PASSWORD: ${{ secrets.DOCKER_HUB_PASS }}
         run: |
           crane auth login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-      - uses: actions/checkout@v2
-      - uses: buildpacks/github-actions/setup-pack@v4.4.2
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
