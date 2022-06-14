@@ -33,7 +33,7 @@ function main() {
 
 function usage() {
   cat <<-USAGE
-release-build-cr.sh [OPTIONS]
+release-base-cr.sh [OPTIONS]
 
 Publish into ECR_REGISTRY
 
@@ -51,8 +51,14 @@ function cmd::build() {
   printf "  ----> Id: %s" $repository
   printf "  ----> Tag: %s" "$ECR_REGISTRY/$repository:$IMAGE_TAG"
 
-  docker tag $LOCAL_IMAGE $ECR_REGISTRY/$repository:$IMAGE_TAG
-  docker push $ECR_REGISTRY/$repository:"$IMAGE_TAG"
+#  docker tag $LOCAL_IMAGE $ECR_REGISTRY/$repository:$IMAGE_TAG
+#  docker push $ECR_REGISTRY/$repository:"$IMAGE_TAG"
+
+  printf "Export image %s" "$1"
+  sid=$(docker run --entrypoint artisan -d $1)
+  docker cp -L $sid:/workspace .
+  cp -r workspace/* .
+  docker rm $sid
 }
 
 main "${@:-}"

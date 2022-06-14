@@ -145,6 +145,14 @@ jobs:
           registry: docker.io
           username: ${{ secrets.DOCKER_HUB_USER }}
           password: ${{ secrets.DOCKER_HUB_PASS }}
+      - uses: imjasonh/setup-crane@v0.1
+      - name: Crane auth login
+        env:
+          ECR_REGISTRY: docker.io
+          CI_REGISTRY_USER: ${{ secrets.DOCKER_HUB_USER }}
+          CI_REGISTRY_PASSWORD: ${{ secrets.DOCKER_HUB_PASS }}
+        run: |
+          crane auth login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
       - uses: actions/checkout@v2
       - uses: buildpacks/github-actions/setup-pack@v4.4.2
       - name: Setup Node.js
@@ -163,6 +171,15 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: version
+      - name: CR Base Release
+        env:
+          LOCAL_IMAGE: simple
+          IMAGE_TAG: latest
+          RELEASE: ${{ fromJSON('["no", "yes"]')[github.ref != 'refs/heads/main'] }}
+          ECR_REGISTRY: docker.io
+        run: |
+          chmod +x ./scripts/release-base-cr.sh
+          ./scripts/release-base-cr.sh
       - name: Build custom
         id: flavor
         continue-on-error: false
