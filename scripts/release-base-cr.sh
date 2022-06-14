@@ -9,12 +9,23 @@ readonly PROGDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${PROGDIR}/.util/print.sh"
 
 function main() {
+  
+  local dir
+
+  dir=$(pwd)
+
   while [[ "${#}" != 0 ]]; do
     case "${1}" in
     --help | -h)
       shift 1
       usage
       exit 0
+      ;;
+
+    --directory | -d)
+        dir="$2"
+        shift # past argument
+        shift # past value
       ;;
 
     "")
@@ -28,7 +39,7 @@ function main() {
     esac
   done
 
-  cmd::build
+  cmd::build $dir
 }
 
 function usage() {
@@ -44,21 +55,19 @@ USAGE
 
 function cmd::build() {
 
-  : ${IMAGE_TAG:=dev}
+  : ${IMAGE_TAG:=debug}
+  : ${ECR_REGISTRY:=docker.io}
 
-  readonly repository="laraboot/laravel"
+  workspace=$1
+  tag=$IMAGE_TAG
+
+  readonly repository="laraboot/laravel-app"
 
   printf "  ----> Id: %s" $repository
   printf "  ----> Tag: %s" "$ECR_REGISTRY/$repository:$IMAGE_TAG"
 
-#  docker tag $LOCAL_IMAGE $ECR_REGISTRY/$repository:$IMAGE_TAG
-#  docker push $ECR_REGISTRY/$repository:"$IMAGE_TAG"
-
-  printf "Export image %s" "$1"
-  sid=$(docker run --entrypoint artisan -d $1)
-  docker cp -L $sid:/workspace .
-  cp -r workspace/* .
-  docker rm $sid
+  # use -b flag to specify base e.g busybox
+  crane append -f <(tar -f - --directory=$workspace -c ./) -t $repository:$tag
 }
 
 main "${@:-}"

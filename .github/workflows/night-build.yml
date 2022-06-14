@@ -7,6 +7,7 @@ on:
     branches:
       - master
       - main
+      - dev
 
 jobs:
   build-base:
@@ -173,13 +174,16 @@ jobs:
           name: version
       - name: CR Base Release
         env:
-          LOCAL_IMAGE: simple
-          IMAGE_TAG: latest
-          RELEASE: ${{ fromJSON('["no", "yes"]')[github.ref != 'refs/heads/main'] }}
+          IMAGE_TAG: ${{ fromJSON('["latest", "debug"]')[github.ref != 'refs/heads/main'] }}
           ECR_REGISTRY: docker.io
         run: |
+          #!/usr/bin/env bash
+          set -euo pipefail
+          dirname=$(mktemp -d)
+          # Untar base app
+          tar -zxf app.tar.gz -C $dirname
           chmod +x ./scripts/release-base-cr.sh
-          ./scripts/release-base-cr.sh
+          ./scripts/release-base-cr.sh -d $dirname
       - name: Build custom
         id: flavor
         continue-on-error: false
