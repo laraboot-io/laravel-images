@@ -185,7 +185,7 @@ jobs:
           # Untar base app
           tar -zxf app.tar.gz -C "$dirname/usr/src/app"
           chmod +x ./scripts/release-base-cr.sh
-          ./scripts/release-base-cr.sh -d $dirname
+          ./scripts/release-base-cr.sh -d $dirname -t cli
           runnableDir=$(mktemp -d)
           mkdir -p "$runnableDir/usr/src/app"
           tar -zxf app.tar.gz -C "$runnableDir/usr/src/app"
