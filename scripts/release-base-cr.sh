@@ -76,7 +76,15 @@ function cmd::build() {
 
   workspace=$1
   tag=$2
-  base=$3
+  base=""
+
+  if [ "$#" -gt 3 ]; then
+      echo "Illegal number of parameters"
+  fi
+
+  if [ "$#" -gt 2 ]; then
+      base=$3
+  fi
 
   readonly repository="laraboot/laravel-app"
 
