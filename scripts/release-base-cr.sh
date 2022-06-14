@@ -103,7 +103,7 @@ function cmd::build() {
   fi
 
   # now flatten
-  crane flatten laraboot/laravel-app:$debugTag -t $tag -v
+  crane flatten laraboot/laravel-app:$tag -v
 }
 
 main "${@:-}"
