@@ -76,6 +76,7 @@ function cmd::build() {
 
   workspace=$1
   tag=$2
+  debugTag="$tag-debug"
   base=""
 
   if [ "$#" -gt 3 ]; then
@@ -94,12 +95,15 @@ function cmd::build() {
 
   if test -z "$base" 
   then
-    crane append -f <(tar -f - --directory=$workspace -c usr/src/app) -t $repository:$tag
+    crane append -f <(tar -f - --directory=$workspace -c usr/src/app) -t $repository:$debugTag
   else
     printf " ----> Base: %s \n" $base
     # use -b flag to specify base e.g busybox
-    crane append -b $base -f <(tar -f - --directory=$workspace -c usr/src/app) -t $repository:$tag
+    crane append -b $base -f <(tar -f - --directory=$workspace -c usr/src/app) -t $repository:$debugTag
   fi
+
+  # now flatten
+  crane flatten laraboot/laravel-app:$debugTag -t $tag -v
 }
 
 main "${@:-}"
