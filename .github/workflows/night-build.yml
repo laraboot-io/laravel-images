@@ -181,8 +181,9 @@ jobs:
           #!/usr/bin/env bash
           set -euo pipefail
           dirname=$(mktemp -d)
+          mkdir -p "$dirname/usr/src/app"
           # Untar base app
-          tar -zxf app.tar.gz -C $dirname
+          tar -zxf app.tar.gz -C "$dirname/usr/src/app"
           chmod +x ./scripts/release-base-cr.sh
           ./scripts/release-base-cr.sh -d $dirname
           runnableDir=$(mktemp -d)
