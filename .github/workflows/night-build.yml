@@ -187,7 +187,7 @@ jobs:
           runnableDir=$(mktemp -d)
           mkdir -p "$runnableDir/usr/src/app"
           tar -zxf app.tar.gz -C "$runnableDir/usr/src/app"
-          ./scripts/release-base-cr.sh -d $dirname -t cli -b thecodingmachine/php:8.1-v4-cli
+          ./scripts/release-base-cr.sh -d $runnableDir -t cli -b thecodingmachine/php:8.1-v4-cli
       - name: Build custom
         id: flavor
         continue-on-error: false
