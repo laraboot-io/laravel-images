@@ -124,18 +124,22 @@ jobs:
         id: build
         run: |
           composer show -f json laravel/framework | jq -r ".versions[0]" > /tmp/version.txt
-          tar -czf /tmp/app.tar.gz .
+          tar -czf /tmp/${{ matrix.php-versions }}-app.tar.gz .
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: app
-          path: /tmp/app.tar.gz
+          path: /tmp/${{ matrix.php-versions }}-app.tar.gz
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: version
           path: /tmp/version.txt
   release-base:
+    strategy:
+      matrix:
+        operating-system: [ ubuntu-latest ]
+        php-versions: [ '8.0','8.1' ]
     needs:
       - build-base
     runs-on: ubuntu-latest
@@ -164,35 +168,38 @@ jobs:
       - name: Install PHP versions
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.0'
+          php-version: ${{ matrix.php-versions }}
       - name: Download base artifact
         uses: actions/download-artifact@v2
         with:
-          name: app
+          name: ${{ matrix.php-versions }}-app
       - name: Download app meta
         uses: actions/download-artifact@v2
         with:
-          name: version
+          name: ${{ matrix.php-versions }}-version
       - name: CR Base Release
         env:
           IMAGE_TAG: ${{ fromJSON('["latest", "debug"]')[github.ref != 'refs/heads/main'] }}
           ECR_REGISTRY: docker.io
+          TAR_FILE: ${{ matrix.php-versions }}-app.tar.gz
         run: |
           #!/usr/bin/env bash
           set -euo pipefail
           dirname=$(mktemp -d)
           mkdir -p "$dirname/usr/src/app"
           # Untar base app
-          tar -zxf app.tar.gz -C "$dirname/usr/src/app"
+          tar -zxf $TAR_FILE -C "$dirname/usr/src/app"
           chmod +x ./scripts/release-base-cr.sh
-          ./scripts/release-base-cr.sh -d $dirname -t framework
+          ./scripts/release-base-cr.sh -d $dirname -t ${{ matrix.php-versions }}-framework
           runnableDir=$(mktemp -d)
           mkdir -p "$runnableDir/usr/src/app"
-          tar -zxf app.tar.gz -C "$runnableDir/usr/src/app"
-          ./scripts/release-base-cr.sh -d $runnableDir -t cli -b thecodingmachine/php:8.1-v4-cli
+          tar -zxf $TAR_FILE -C "$runnableDir/usr/src/app"
+          ./scripts/release-base-cr.sh -d $runnableDir -t ${{ matrix.php-versions }}-cli -b thecodingmachine/php:${{ matrix.php-versions }}-v4-cli
       - name: Build custom
         id: flavor
         continue-on-error: false
+        env:
+          TAR_FILE: ${{ matrix.php-versions }}-app.tar.gz
         run: |
           #!/usr/bin/env bash
           set -euo pipefail
@@ -203,7 +210,7 @@ jobs:
           mkdir -p /tmp/simple
           cwd=$(pwd)
           # Untar base app
-          tar -zxf app.tar.gz -C $dirname
+          tar -zxf $TAR_FILE -C $dirname
           sudo chmod 666 /var/run/docker.sock
           chmod +x ./scripts/features.sh
           LARAVEL_DIR_APP="${cwd}/${dirname}" ./scripts/features.sh --simple
@@ -212,6 +219,7 @@ jobs:
           LOCAL_IMAGE: simple
           IMAGE_TAG: latest
           RELEASE: ${{ fromJSON('["no", "yes"]')[github.ref != 'refs/heads/main'] }}
+          TAR_FILE: ${{ matrix.php-versions }}-app.tar.gz
           ECR_REGISTRY: docker.io
         run: |
           chmod +x ./scripts/release-build-cr.sh
