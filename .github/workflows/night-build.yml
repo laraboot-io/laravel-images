@@ -185,8 +185,8 @@ jobs:
           chmod +x ./scripts/release-base-cr.sh
           ./scripts/release-base-cr.sh -d $dirname
           runnableDir=$(mktemp -d)
-          mkdir -p usr/src/app
-          tar -zxf app.tar.gz -C "$dirname/usr/src/app"
+          mkdir -p "$runnableDir/usr/src/app"
+          tar -zxf app.tar.gz -C "$runnableDir/usr/src/app"
           ./scripts/release-base-cr.sh -d $dirname -t cli -b thecodingmachine/php:8.1-v4-cli
       - name: Build custom
         id: flavor
