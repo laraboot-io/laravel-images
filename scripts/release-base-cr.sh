@@ -10,9 +10,14 @@ source "${PROGDIR}/.util/print.sh"
 
 function main() {
   
-  local dir
+  local dir tag base
+
+  : ${IMAGE_TAG:=debug}
+
 
   dir=$(pwd)
+  tag=$IMAGE_TAG
+  base=""
 
   while [[ "${#}" != 0 ]]; do
     case "${1}" in
@@ -24,6 +29,18 @@ function main() {
 
     --directory | -d)
         dir="$2"
+        shift # past argument
+        shift # past value
+      ;;
+    
+    --base | -b)
+        base="$2"
+        shift # past argument
+        shift # past value
+      ;;
+    
+    --tag | -t)
+        tag="$2"
         shift # past argument
         shift # past value
       ;;
@@ -39,7 +56,7 @@ function main() {
     esac
   done
 
-  cmd::build $dir
+  cmd::build $dir $tag $base
 }
 
 function usage() {
@@ -55,19 +72,26 @@ USAGE
 
 function cmd::build() {
 
-  : ${IMAGE_TAG:=debug}
   : ${ECR_REGISTRY:=docker.io}
 
   workspace=$1
-  tag=$IMAGE_TAG
+  tag=$2
+  base=$3
 
   readonly repository="laraboot/laravel-app"
 
-  printf "  ----> Id: %s" $repository
-  printf "  ----> Tag: %s" "$ECR_REGISTRY/$repository:$IMAGE_TAG"
+  util::print::title "Releasing OCI artifacts"
+  printf " ----> Id: %s \n" $repository
+  printf " ----> Tag: %s \n" "$ECR_REGISTRY/$repository:$IMAGE_TAG"
 
-  # use -b flag to specify base e.g busybox
-  crane append -f <(tar -f - --directory=$workspace -c ./) -t $repository:$tag
+  if test -z "$base" 
+  then
+    crane append -f <(tar -f - --directory=$workspace -c usr/src/app) -t $repository:$tag
+  else
+    printf " ----> Base: %s \n" $base
+    # use -b flag to specify base e.g busybox
+    crane append -b $base -f <(tar -f - --directory=$workspace -c usr/src/app) -t $repository:$tag
+  fi
 }
 
 main "${@:-}"
