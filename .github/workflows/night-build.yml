@@ -148,9 +148,8 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_PASS }}
       - uses: actions/checkout@v2
       - uses: buildpacks/github-actions/setup-pack@v4.4.2
-      - uses: imjasonh/setup-crane@v0.1
         with:
-          version: v0.9.0
+          crane-version: v0.9.0
       - name: Crane auth login
         env:
           CI_REGISTRY: docker.io
