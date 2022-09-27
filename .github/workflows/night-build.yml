@@ -3,11 +3,6 @@ on:
   workflow_dispatch:
   schedule:
     - cron: "0 2 * * *"
-  push:
-    branches:
-      - master
-      - main
-      - dev
 
 jobs:
   build-base:
