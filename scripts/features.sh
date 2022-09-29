@@ -236,13 +236,14 @@ function laraboot::install() {
 }
 
 function laraboot::build(){
+  builderName=$(tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c10)
   util::print::title "Listing existing docker images"
   docker ps -a --format '{{.Image}} {{.Names}}'
   util::print::title "Removing any existing builders"
   # remove existing builder if any (before)
-  [ "$(docker ps -a --format '{{.Image}} {{.Names}}' | grep builder)" ] && docker rm -f $(docker ps -aq --filter name=builder)
+  [ "$(docker ps -a --format '{{.Image}} {{.Names}}' | grep $builderName)" ] && docker rm -f $(docker ps -aq --filter name=$builderName)
   util::print::title "Building"
-  laraboot build -vvv --cc
+  laraboot build --bn=$builderName -vvv --cc
   util::print::title "Build finished"
 }
 
