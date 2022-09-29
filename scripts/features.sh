@@ -236,7 +236,7 @@ function laraboot::install() {
 }
 
 function laraboot::build(){
-  builderName=$(tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c10)
+  builderName=$(mktemp XXXXX)
   util::print::title "Listing existing docker images"
   docker ps -a --format '{{.Image}} {{.Names}}'
   util::print::title "Removing any existing builders"
