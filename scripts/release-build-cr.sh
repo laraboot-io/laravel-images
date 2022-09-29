@@ -3,6 +3,11 @@
 set -eu
 set -o pipefail
 
+readonly PROGDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# shellcheck source=PROGDIR/.util/print.sh
+source "${PROGDIR}/.util/print.sh"
+
 function main() {
   while [[ "${#}" != 0 ]]; do
     case "${1}" in
@@ -43,8 +48,8 @@ function cmd::build() {
 
   readonly repository="laraboot/laravel"
 
-  echo "  ----> Id: $repository"
-  echo "  ----> Tag: $ECR_REGISTRY/$repository:$IMAGE_TAG"
+  printf "  ----> Id: %s" $repository
+  printf "  ----> Tag: %s" "$ECR_REGISTRY/$repository:$IMAGE_TAG"
 
   docker tag $LOCAL_IMAGE $ECR_REGISTRY/$repository:$IMAGE_TAG
   docker push $ECR_REGISTRY/$repository:"$IMAGE_TAG"

@@ -1,1 +1,9 @@
-# pending
+laravel-starterkit:
+  jetstream:
+    enabled: false
+    teams: true
+    stack: livewire
+  breeze:
+    enabled: false
+    stack: react
+    params: --pest

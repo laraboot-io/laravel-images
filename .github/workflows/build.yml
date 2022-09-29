@@ -2,7 +2,7 @@ name: Builder
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 * * * *"
+    - cron: "0 2 * * *"
   push:
     branches:
       - feature/*
@@ -144,7 +144,7 @@ jobs:
       max-parallel: 1
       matrix:
         operating-system: [ ubuntu-latest ]
-        flavor: [ 'simple', 'with-breeze','with-jetstream' ]
+        flavor: [ 'simple' ]
     steps:
       - uses: buildpacks/github-actions/setup-pack@v4.4.2
       - uses: actions/checkout@v2
