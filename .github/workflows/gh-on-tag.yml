@@ -31,15 +31,15 @@ jobs:
         run : |
           pushd docs
             mkdir themes
-            
+          
             pushd themes
               git clone https://github.com/laraboot-io/images-theme.git
               rm -rf images-theme/content/*
             popd
-            
+          
             mkdir -p content/writing
             file="content/writing/${RELEASE_VERSION}.md"
-  
+          
             touch $file
             echo "---" > $file
             echo "title: \"${RELEASE_VERSION}\"" >> $file
@@ -48,7 +48,7 @@ jobs:
             echo "---" >> $file
             echo "" >> $file
             echo "${RELEASE_VERSION}" >> $file
-  
+          
             hugo -D -b https://laraboot-io.github.io/laravel-images/ -t images-theme
           popd
 
