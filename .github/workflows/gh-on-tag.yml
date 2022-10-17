@@ -44,7 +44,7 @@ jobs:
             touch $file
             echo "---" > $file
             echo "title: \"${RELEASE_VERSION}\"" >> $file
-            echo "date: 2021-11-14T22:40:38Z" >> $file
+            echo "date: ${now}" >> $file
             echo "draft: false" >> $file
             echo "---" >> $file
             echo "" >> $file
