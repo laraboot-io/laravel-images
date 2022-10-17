@@ -40,6 +40,7 @@ jobs:
             mkdir -p content/writing
             file="content/writing/${RELEASE_VERSION}.md"
           
+            now=`date +"%Y-%m-%dT%T"`
             touch $file
             echo "---" > $file
             echo "title: \"${RELEASE_VERSION}\"" >> $file
