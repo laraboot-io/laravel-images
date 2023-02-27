@@ -138,7 +138,7 @@ jobs:
     strategy:
       matrix:
         operating-system: [ ubuntu-latest ]
-        php-versions: [ '8.0','8.1' ]
+        php-versions: [ '8.1' ]
     needs:
       - build-base
     runs-on: ubuntu-latest
