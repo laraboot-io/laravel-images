@@ -157,11 +157,11 @@ jobs:
         with:
           php-version: '8.0'
       - name: Download base artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4.1.7
         with:
           name: app
       - name: Download app meta
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4.1.7
         with:
           name: version
       - id: getversion
@@ -238,7 +238,7 @@ jobs:
           role-to-assume: ${{ secrets.AWS_OIDC_ROLE }}
           aws-region: ${{ secrets.AWS_REGION }}
       - name: Download artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4.1.7
         with:
           path: artifacts
       - id: dist
